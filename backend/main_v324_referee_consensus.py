@@ -1,4 +1,4 @@
-import os
+﻿import os
 import sqlite3
 from pathlib import Path
 import re
@@ -66,10 +66,10 @@ BBS_API_KEY = os.getenv("BBS_API_KEY")
 
 
 if not FOOTBALL_DATA_TOKEN:
-    raise RuntimeError("Не знайдено FOOTBALL_DATA_TOKEN у .env")
+    raise RuntimeError("РќРµ Р·РЅР°Р№РґРµРЅРѕ FOOTBALL_DATA_TOKEN Сѓ .env")
 
 if not ODDS_API_KEY:
-    raise RuntimeError("Не знайдено ODDS_API_KEY у .env")
+    raise RuntimeError("РќРµ Р·РЅР°Р№РґРµРЅРѕ ODDS_API_KEY Сѓ .env")
 
 
 FOOTBALL_BASE_URL = "https://api.football-data.org/v4"
@@ -97,32 +97,32 @@ HISTORY_SEASONS = [
 TOP5_LEAGUES = {
 
     "CL": {
-        "name": "Європа — Ліга чемпіонів UEFA",
+        "name": "Р„РІСЂРѕРїР° вЂ” Р›С–РіР° С‡РµРјРїС–РѕРЅС–РІ UEFA",
         "odds_key": "soccer_uefa_champs_league",
     },
 
     "PL": {
-        "name": "Англія — Premier League",
+        "name": "РђРЅРіР»С–СЏ вЂ” Premier League",
         "odds_key": "soccer_epl",
     },
 
     "PD": {
-        "name": "Іспанія — La Liga",
+        "name": "Р†СЃРїР°РЅС–СЏ вЂ” La Liga",
         "odds_key": "soccer_spain_la_liga",
     },
 
     "SA": {
-        "name": "Італія — Serie A",
+        "name": "Р†С‚Р°Р»С–СЏ вЂ” Serie A",
         "odds_key": "soccer_italy_serie_a",
     },
 
     "BL1": {
-        "name": "Німеччина — Bundesliga",
+        "name": "РќС–РјРµС‡С‡РёРЅР° вЂ” Bundesliga",
         "odds_key": "soccer_germany_bundesliga",
     },
 
     "FL1": {
-        "name": "Франція — Ligue 1",
+        "name": "Р¤СЂР°РЅС†С–СЏ вЂ” Ligue 1",
         "odds_key": "soccer_france_ligue_one",
     },
 }
@@ -133,7 +133,7 @@ TOP5_LEAGUES = {
 # ============================================================
 # football-data.org: CL
 # The Odds API: soccer_uefa_champs_league
-# Реальні коефіцієнти беруться з Odds API.
+# Р РµР°Р»СЊРЅС– РєРѕРµС„С–С†С–С”РЅС‚Рё Р±РµСЂСѓС‚СЊСЃСЏ Р· Odds API.
 
 
 # ============================================================
@@ -294,7 +294,7 @@ async def bbs_api_get(path, params=None):
             BBS_AUTH_FAILED = True
             raise RuntimeError(
                 "BBS HTTP 401: invalid API key. "
-                "Перевір BBS_API_KEY у .env (ключ має починатися з bbs_live_)."
+                "РџРµСЂРµРІС–СЂ BBS_API_KEY Сѓ .env (РєР»СЋС‡ РјР°С” РїРѕС‡РёРЅР°С‚РёСЃСЏ Р· bbs_live_)."
             )
 
         if response.status == 429:
@@ -322,12 +322,12 @@ async def bbs_api_get(path, params=None):
 
 
 async def get_sofascore_session():
-    """Окрема сесія SofaScore з вимкненою перевіркою SSL.
+    """РћРєСЂРµРјР° СЃРµСЃС–СЏ SofaScore Р· РІРёРјРєРЅРµРЅРѕСЋ РїРµСЂРµРІС–СЂРєРѕСЋ SSL.
 
-    На деяких Windows-системах локальний certificate store не бачить
-    ланцюжок сертифікатів SofaScore, через що виникає
-    SSLCertVerificationError. Для цього API використовуємо окрему
-    aiohttp-сесію з TCPConnector(ssl=False), не змінюючи інші API.
+    РќР° РґРµСЏРєРёС… Windows-СЃРёСЃС‚РµРјР°С… Р»РѕРєР°Р»СЊРЅРёР№ certificate store РЅРµ Р±Р°С‡РёС‚СЊ
+    Р»Р°РЅС†СЋР¶РѕРє СЃРµСЂС‚РёС„С–РєР°С‚С–РІ SofaScore, С‡РµСЂРµР· С‰Рѕ РІРёРЅРёРєР°С”
+    SSLCertVerificationError. Р”Р»СЏ С†СЊРѕРіРѕ API РІРёРєРѕСЂРёСЃС‚РѕРІСѓС”РјРѕ РѕРєСЂРµРјСѓ
+    aiohttp-СЃРµСЃС–СЋ Р· TCPConnector(ssl=False), РЅРµ Р·РјС–РЅСЋСЋС‡Рё С–РЅС€С– API.
     """
     global SOFASCORE_SESSION
 
@@ -389,48 +389,48 @@ def normalize_name(name):
 
         "&": " and ",
 
-        "á": "a",
-        "à": "a",
-        "ä": "a",
-        "â": "a",
-        "ã": "a",
-        "å": "a",
+        "ГЎ": "a",
+        "Г ": "a",
+        "Г¤": "a",
+        "Гў": "a",
+        "ГЈ": "a",
+        "ГҐ": "a",
 
-        "é": "e",
-        "è": "e",
-        "ë": "e",
-        "ê": "e",
+        "Г©": "e",
+        "ГЁ": "e",
+        "Г«": "e",
+        "ГЄ": "e",
 
-        "í": "i",
-        "ì": "i",
-        "ï": "i",
-        "î": "i",
+        "Г­": "i",
+        "Г¬": "i",
+        "ГЇ": "i",
+        "Г®": "i",
 
-        "ó": "o",
-        "ò": "o",
-        "ö": "o",
-        "ô": "o",
-        "õ": "o",
+        "Гі": "o",
+        "ГІ": "o",
+        "Г¶": "o",
+        "Гґ": "o",
+        "Гµ": "o",
 
-        "ú": "u",
-        "ù": "u",
-        "ü": "u",
-        "û": "u",
+        "Гє": "u",
+        "Г№": "u",
+        "Гј": "u",
+        "Г»": "u",
 
-        "ñ": "n",
-        "ç": "c",
+        "Г±": "n",
+        "Г§": "c",
 
-        "ý": "y",
-        "ÿ": "y",
+        "ГЅ": "y",
+        "Гї": "y",
 
-        "ć": "c",
-        "č": "c",
-        "š": "s",
-        "ž": "z",
-        "đ": "d",
-        "ł": "l",
+        "Д‡": "c",
+        "ДЌ": "c",
+        "ЕЎ": "s",
+        "Еѕ": "z",
+        "Д‘": "d",
+        "Е‚": "l",
 
-        "’": " ",
+        "вЂ™": " ",
         "'": " ",
         "-": " ",
         "_": " ",
@@ -441,15 +441,15 @@ def normalize_name(name):
         name = name.replace(old, new)
 
     name = re.sub(
-        r"[^a-zа-яіїєґ0-9 ]+",
+        r"[^a-zР°-СЏС–С—С”Т‘0-9 ]+",
         " ",
         name
     )
 
-    # Часті службові суфікси, які відрізняються між football-data.org
-    # та The Odds API: FC, CF, AFC, SC, FK тощо.
+    # Р§Р°СЃС‚С– СЃР»СѓР¶Р±РѕРІС– СЃСѓС„С–РєСЃРё, СЏРєС– РІС–РґСЂС–Р·РЅСЏСЋС‚СЊСЃСЏ РјС–Р¶ football-data.org
+    # С‚Р° The Odds API: FC, CF, AFC, SC, FK С‚РѕС‰Рѕ.
     name = re.sub(
-        r"\b(fc|cf|afc|sc|fk|sk|sv|kv|ac|calcio|club|osc|balompie|balompié)\b",
+        r"\b(fc|cf|afc|sc|fk|sk|sv|kv|ac|calcio|club|osc|balompie|balompiГ©)\b",
         " ",
         name
     )
@@ -469,43 +469,43 @@ def normalize_name(name):
 
 UKR_TO_LATIN = {
 
-    "а": "a",
-    "б": "b",
-    "в": "v",
-    "г": "h",
-    "ґ": "g",
-    "д": "d",
-    "е": "e",
-    "є": "ye",
-    "ж": "zh",
-    "з": "z",
-    "и": "y",
-    "і": "i",
-    "ї": "yi",
-    "й": "y",
-    "к": "k",
-    "л": "l",
-    "м": "m",
-    "н": "n",
-    "о": "o",
-    "п": "p",
-    "р": "r",
-    "с": "s",
-    "т": "t",
-    "у": "u",
-    "ф": "f",
-    "х": "kh",
-    "ц": "ts",
-    "ч": "ch",
-    "ш": "sh",
-    "щ": "shch",
-    "ь": "",
-    "ю": "yu",
-    "я": "ya",
-    "ё": "yo",
-    "э": "e",
-    "ы": "y",
-    "ъ": "",
+    "Р°": "a",
+    "Р±": "b",
+    "РІ": "v",
+    "Рі": "h",
+    "Т‘": "g",
+    "Рґ": "d",
+    "Рµ": "e",
+    "С”": "ye",
+    "Р¶": "zh",
+    "Р·": "z",
+    "Рё": "y",
+    "С–": "i",
+    "С—": "yi",
+    "Р№": "y",
+    "Рє": "k",
+    "Р»": "l",
+    "Рј": "m",
+    "РЅ": "n",
+    "Рѕ": "o",
+    "Рї": "p",
+    "СЂ": "r",
+    "СЃ": "s",
+    "С‚": "t",
+    "Сѓ": "u",
+    "С„": "f",
+    "С…": "kh",
+    "С†": "ts",
+    "С‡": "ch",
+    "С€": "sh",
+    "С‰": "shch",
+    "СЊ": "",
+    "СЋ": "yu",
+    "СЏ": "ya",
+    "С‘": "yo",
+    "СЌ": "e",
+    "С‹": "y",
+    "СЉ": "",
 }
 
 
@@ -537,183 +537,183 @@ def transliterate_ukrainian(text):
 
 ALIASES = {
 
-    "арсенал": ["arsenal", "arsenal fc"],
-    "астон вілла": ["aston villa", "aston villa fc"],
-    "брентфорд": ["brentford", "brentford fc"],
-    "брайтон": [
+    "Р°СЂСЃРµРЅР°Р»": ["arsenal", "arsenal fc"],
+    "Р°СЃС‚РѕРЅ РІС–Р»Р»Р°": ["aston villa", "aston villa fc"],
+    "Р±СЂРµРЅС‚С„РѕСЂРґ": ["brentford", "brentford fc"],
+    "Р±СЂР°Р№С‚РѕРЅ": [
         "brighton",
         "brighton and hove albion",
         "brighton hove albion",
     ],
-    "бернлі": ["burnley", "burnley fc"],
-    "борнмут": ["bournemouth", "afc bournemouth"],
-    "вест хем": ["west ham", "west ham united"],
-    "вулвергемптон": [
+    "Р±РµСЂРЅР»С–": ["burnley", "burnley fc"],
+    "Р±РѕСЂРЅРјСѓС‚": ["bournemouth", "afc bournemouth"],
+    "РІРµСЃС‚ С…РµРј": ["west ham", "west ham united"],
+    "РІСѓР»РІРµСЂРіРµРјРїС‚РѕРЅ": [
         "wolves",
         "wolverhampton",
         "wolverhampton wanderers",
     ],
-    "вулверхемптон": [
+    "РІСѓР»РІРµСЂС…РµРјРїС‚РѕРЅ": [
         "wolves",
         "wolverhampton",
         "wolverhampton wanderers",
     ],
-    "кристал пелес": ["crystal palace"],
-    "крістал пелес": ["crystal palace"],
-    "ліверпуль": ["liverpool", "liverpool fc"],
-    "манчестер сіті": ["manchester city"],
-    "ман сіті": ["manchester city"],
-    "манчестер юнайтед": ["manchester united"],
-    "ман юнайтед": ["manchester united"],
-    "ньюкасл": ["newcastle", "newcastle united"],
-    "ноттінгем": ["nottingham forest"],
-    "нотвінгем": ["nottingham forest"],
-    "тоттенгем": ["tottenham", "tottenham hotspur"],
-    "тоттенхем": ["tottenham", "tottenham hotspur"],
-    "челсі": ["chelsea"],
-    "фулгем": ["fulham"],
-    "фулхем": ["fulham"],
+    "РєСЂРёСЃС‚Р°Р» РїРµР»РµСЃ": ["crystal palace"],
+    "РєСЂС–СЃС‚Р°Р» РїРµР»РµСЃ": ["crystal palace"],
+    "Р»С–РІРµСЂРїСѓР»СЊ": ["liverpool", "liverpool fc"],
+    "РјР°РЅС‡РµСЃС‚РµСЂ СЃС–С‚С–": ["manchester city"],
+    "РјР°РЅ СЃС–С‚С–": ["manchester city"],
+    "РјР°РЅС‡РµСЃС‚РµСЂ СЋРЅР°Р№С‚РµРґ": ["manchester united"],
+    "РјР°РЅ СЋРЅР°Р№С‚РµРґ": ["manchester united"],
+    "РЅСЊСЋРєР°СЃР»": ["newcastle", "newcastle united"],
+    "РЅРѕС‚С‚С–РЅРіРµРј": ["nottingham forest"],
+    "РЅРѕС‚РІС–РЅРіРµРј": ["nottingham forest"],
+    "С‚РѕС‚С‚РµРЅРіРµРј": ["tottenham", "tottenham hotspur"],
+    "С‚РѕС‚С‚РµРЅС…РµРј": ["tottenham", "tottenham hotspur"],
+    "С‡РµР»СЃС–": ["chelsea"],
+    "С„СѓР»РіРµРј": ["fulham"],
+    "С„СѓР»С…РµРј": ["fulham"],
 
-    "барселона": ["barcelona", "fc barcelona", "barca"],
-    "реал мадрид": ["real madrid", "real madrid cf"],
-    "реал": ["real madrid"],
-    "атлетіко мадрид": [
+    "Р±Р°СЂСЃРµР»РѕРЅР°": ["barcelona", "fc barcelona", "barca"],
+    "СЂРµР°Р» РјР°РґСЂРёРґ": ["real madrid", "real madrid cf"],
+    "СЂРµР°Р»": ["real madrid"],
+    "Р°С‚Р»РµС‚С–РєРѕ РјР°РґСЂРёРґ": [
         "atletico madrid",
         "atletico de madrid",
     ],
-    "атлетико": ["atletico madrid"],
-    "севілья": ["sevilla", "sevilla fc"],
-    "вільярреал": ["villarreal", "villarreal cf"],
-    "бетіс": ["real betis", "real betis balompie"],
-    "бетіc": ["real betis"],
-    "реал бетіс": ["real betis"],
-    "валенсія": ["valencia", "valencia cf"],
-    "реал сосьєдад": ["real sociedad"],
-    "більбао": ["athletic club", "athletic bilbao"],
-    "атлетік": ["athletic club", "athletic bilbao"],
-    "осасуна": ["osasuna", "ca osasuna"],
-    "мальорка": ["mallorca", "rcd mallorca"],
-    "майорка": ["mallorca", "rcd mallorca"],
-    "хетафе": ["getafe", "getafe cf"],
-    "селта": ["celta", "celta vigo", "rc celta"],
-    "жирона": ["girona", "girona fc"],
-    "райо вальєкано": ["rayo vallecano"],
-    "алмерія": ["almeria", "ud almeria"],
-    "малага": ["malaga", "malaga cf"],
-    "еспаньйол": ["espanyol", "rcd espanyol"],
+    "Р°С‚Р»РµС‚РёРєРѕ": ["atletico madrid"],
+    "СЃРµРІС–Р»СЊСЏ": ["sevilla", "sevilla fc"],
+    "РІС–Р»СЊСЏСЂСЂРµР°Р»": ["villarreal", "villarreal cf"],
+    "Р±РµС‚С–СЃ": ["real betis", "real betis balompie"],
+    "Р±РµС‚С–c": ["real betis"],
+    "СЂРµР°Р» Р±РµС‚С–СЃ": ["real betis"],
+    "РІР°Р»РµРЅСЃС–СЏ": ["valencia", "valencia cf"],
+    "СЂРµР°Р» СЃРѕСЃСЊС”РґР°Рґ": ["real sociedad"],
+    "Р±С–Р»СЊР±Р°Рѕ": ["athletic club", "athletic bilbao"],
+    "Р°С‚Р»РµС‚С–Рє": ["athletic club", "athletic bilbao"],
+    "РѕСЃР°СЃСѓРЅР°": ["osasuna", "ca osasuna"],
+    "РјР°Р»СЊРѕСЂРєР°": ["mallorca", "rcd mallorca"],
+    "РјР°Р№РѕСЂРєР°": ["mallorca", "rcd mallorca"],
+    "С…РµС‚Р°С„Рµ": ["getafe", "getafe cf"],
+    "СЃРµР»С‚Р°": ["celta", "celta vigo", "rc celta"],
+    "Р¶РёСЂРѕРЅР°": ["girona", "girona fc"],
+    "СЂР°Р№Рѕ РІР°Р»СЊС”РєР°РЅРѕ": ["rayo vallecano"],
+    "Р°Р»РјРµСЂС–СЏ": ["almeria", "ud almeria"],
+    "РјР°Р»Р°РіР°": ["malaga", "malaga cf"],
+    "РµСЃРїР°РЅСЊР№РѕР»": ["espanyol", "rcd espanyol"],
 
-    "ювентус": ["juventus", "juventus fc"],
-    "інтер": [
+    "СЋРІРµРЅС‚СѓСЃ": ["juventus", "juventus fc"],
+    "С–РЅС‚РµСЂ": [
         "inter",
         "inter milan",
         "internazionale",
         "fc internazionale milano",
     ],
-    "інтер мілан": [
+    "С–РЅС‚РµСЂ РјС–Р»Р°РЅ": [
         "inter",
         "inter milan",
         "internazionale",
     ],
-    "мілан": ["milan", "ac milan"],
-    "рома": ["roma", "as roma"],
-    "лаціо": ["lazio", "ss lazio"],
-    "наполи": ["napoli", "ssc napoli"],
-    "неаполь": ["napoli", "ssc napoli"],
-    "фіорентина": ["fiorentina", "acf fiorentina"],
-    "болонья": ["bologna"],
-    "торіно": ["torino"],
-    "дженоа": ["genoa"],
-    "генуя": ["genoa"],
-    "аталанта": ["atalanta"],
-    "удінезе": ["udinese"],
-    "лічче": ["lecce"],
-    "монца": ["monza"],
-    "сардинія": ["cagliari", "cagliari calcio"],
+    "РјС–Р»Р°РЅ": ["milan", "ac milan"],
+    "СЂРѕРјР°": ["roma", "as roma"],
+    "Р»Р°С†С–Рѕ": ["lazio", "ss lazio"],
+    "РЅР°РїРѕР»Рё": ["napoli", "ssc napoli"],
+    "РЅРµР°РїРѕР»СЊ": ["napoli", "ssc napoli"],
+    "С„С–РѕСЂРµРЅС‚РёРЅР°": ["fiorentina", "acf fiorentina"],
+    "Р±РѕР»РѕРЅСЊСЏ": ["bologna"],
+    "С‚РѕСЂС–РЅРѕ": ["torino"],
+    "РґР¶РµРЅРѕР°": ["genoa"],
+    "РіРµРЅСѓСЏ": ["genoa"],
+    "Р°С‚Р°Р»Р°РЅС‚Р°": ["atalanta"],
+    "СѓРґС–РЅРµР·Рµ": ["udinese"],
+    "Р»С–С‡С‡Рµ": ["lecce"],
+    "РјРѕРЅС†Р°": ["monza"],
+    "СЃР°СЂРґРёРЅС–СЏ": ["cagliari", "cagliari calcio"],
 
-    "баварія": [
+    "Р±Р°РІР°СЂС–СЏ": [
         "bayern munich",
         "bayern",
         "fc bayern munich",
     ],
-    "бавария": [
+    "Р±Р°РІР°СЂРёСЏ": [
         "bayern munich",
         "bayern",
         "fc bayern munich",
     ],
-    "боруссія дортмунд": [
+    "Р±РѕСЂСѓСЃСЃС–СЏ РґРѕСЂС‚РјСѓРЅРґ": [
         "borussia dortmund",
         "bvb",
         "bvb 09",
     ],
-    "боруссия дортмунд": [
+    "Р±РѕСЂСѓСЃСЃРёСЏ РґРѕСЂС‚РјСѓРЅРґ": [
         "borussia dortmund",
         "bvb",
     ],
-    "дортмунд": ["borussia dortmund", "bvb"],
-    "байєр": [
+    "РґРѕСЂС‚РјСѓРЅРґ": ["borussia dortmund", "bvb"],
+    "Р±Р°Р№С”СЂ": [
         "bayer leverkusen",
         "bayer 04 leverkusen",
         "bayer",
     ],
-    "байер": [
+    "Р±Р°Р№РµСЂ": [
         "bayer leverkusen",
         "bayer 04 leverkusen",
         "bayer",
     ],
-    "байєр леверкузен": ["bayer leverkusen"],
-    "байер леверкузен": ["bayer leverkusen"],
-    "лайпциг": ["rb leipzig", "rasenballsport leipzig"],
-    "рб лейпциг": ["rb leipzig"],
-    "шальке": ["schalke 04", "fc schalke 04"],
-    "вольфсбург": ["wolfsburg", "vfl wolfsburg"],
-    "штутгарт": ["stuttgart", "vfb stuttgart"],
-    "фрайбург": ["freiburg", "sc freiburg"],
-    "хофенгайм": ["hoffenheim", "tsg hoffenheim"],
-    "хоффенгайм": ["hoffenheim", "tsg hoffenheim"],
-    "майнц": ["mainz", "mainz 05"],
-    "вердер": ["werder bremen"],
-    "айнтрахт франкфурт": ["eintracht frankfurt"],
-    "айнтрахт": ["eintracht frankfurt"],
-    "уніон берлін": ["union berlin"],
+    "Р±Р°Р№С”СЂ Р»РµРІРµСЂРєСѓР·РµРЅ": ["bayer leverkusen"],
+    "Р±Р°Р№РµСЂ Р»РµРІРµСЂРєСѓР·РµРЅ": ["bayer leverkusen"],
+    "Р»Р°Р№РїС†РёРі": ["rb leipzig", "rasenballsport leipzig"],
+    "СЂР± Р»РµР№РїС†РёРі": ["rb leipzig"],
+    "С€Р°Р»СЊРєРµ": ["schalke 04", "fc schalke 04"],
+    "РІРѕР»СЊС„СЃР±СѓСЂРі": ["wolfsburg", "vfl wolfsburg"],
+    "С€С‚СѓС‚РіР°СЂС‚": ["stuttgart", "vfb stuttgart"],
+    "С„СЂР°Р№Р±СѓСЂРі": ["freiburg", "sc freiburg"],
+    "С…РѕС„РµРЅРіР°Р№Рј": ["hoffenheim", "tsg hoffenheim"],
+    "С…РѕС„С„РµРЅРіР°Р№Рј": ["hoffenheim", "tsg hoffenheim"],
+    "РјР°Р№РЅС†": ["mainz", "mainz 05"],
+    "РІРµСЂРґРµСЂ": ["werder bremen"],
+    "Р°Р№РЅС‚СЂР°С…С‚ С„СЂР°РЅРєС„СѓСЂС‚": ["eintracht frankfurt"],
+    "Р°Р№РЅС‚СЂР°С…С‚": ["eintracht frankfurt"],
+    "СѓРЅС–РѕРЅ Р±РµСЂР»С–РЅ": ["union berlin"],
 
-    "псж": [
+    "РїСЃР¶": [
         "paris saint germain",
         "paris saint-germain",
         "psg",
     ],
-    "парі сен жермен": [
+    "РїР°СЂС– СЃРµРЅ Р¶РµСЂРјРµРЅ": [
         "paris saint germain",
         "psg",
     ],
-    "марсель": [
+    "РјР°СЂСЃРµР»СЊ": [
         "marseille",
         "olympique de marseille",
         "om",
     ],
-    "ліон": [
+    "Р»С–РѕРЅ": [
         "lyon",
         "olympique lyonnais",
         "olympique lyon",
         "ol",
     ],
-    "ренн": ["rennes", "stade rennais"],
-    "монако": ["monaco", "as monaco"],
-    "ліль": ["lille", "lille osc", "losc lille"],
-    "ніцца": ["nice", "ogc nice"],
-    "ланс": ["lens", "rc lens"],
-    "тулуза": ["toulouse"],
-    "монпельє": ["montpellier"],
-    "нанти": ["nantes"],
-    "нант": ["nantes"],
-    "страсбург": ["strasbourg"],
-    "брест": ["brest", "stade brestois 29"],
-    "реймс": ["reims", "stade de reims"],
-    "осер": ["auxerre", "aj auxerre"],
+    "СЂРµРЅРЅ": ["rennes", "stade rennais"],
+    "РјРѕРЅР°РєРѕ": ["monaco", "as monaco"],
+    "Р»С–Р»СЊ": ["lille", "lille osc", "losc lille"],
+    "РЅС–С†С†Р°": ["nice", "ogc nice"],
+    "Р»Р°РЅСЃ": ["lens", "rc lens"],
+    "С‚СѓР»СѓР·Р°": ["toulouse"],
+    "РјРѕРЅРїРµР»СЊС”": ["montpellier"],
+    "РЅР°РЅС‚Рё": ["nantes"],
+    "РЅР°РЅС‚": ["nantes"],
+    "СЃС‚СЂР°СЃР±СѓСЂРі": ["strasbourg"],
+    "Р±СЂРµСЃС‚": ["brest", "stade brestois 29"],
+    "СЂРµР№РјСЃ": ["reims", "stade de reims"],
+    "РѕСЃРµСЂ": ["auxerre", "aj auxerre"],
 }
 
 
 # ============================================================
-# UEFA CHAMPIONS LEAGUE 2026/27 — UNIVERSAL TEAM REGISTRY
+# UEFA CHAMPIONS LEAGUE 2026/27 вЂ” UNIVERSAL TEAM REGISTRY
 # ============================================================
 # One canonical name for all 36 league-phase teams.
 # Used by Telegram input, Football-Data.org, The Odds API and FotMob.
@@ -725,12 +725,12 @@ CL_TEAM_CANONICAL = {
     "aston villa": ["aston villa", "aston villa fc"],
     "atletico madrid": ["atletico madrid", "atletico de madrid", "atleti", "club atletico de madrid"],
     "barcelona": ["barcelona", "fc barcelona", "barca"],
-    "bayern munich": ["bayern munich", "bayern munchen", "bayern münchen", "bayern", "fc bayern munich", "fc bayern münchen"],
+    "bayern munich": ["bayern munich", "bayern munchen", "bayern mГјnchen", "bayern", "fc bayern munich", "fc bayern mГјnchen"],
     "bodo glimt": ["bodo glimt", "bodoe glimt", "bodo/glimt", "bodo glimt fk", "fk bodo glimt"],
     "borussia dortmund": ["borussia dortmund", "b. dortmund", "bvb", "bvb 09", "dortmund"],
     "club brugge": ["club brugge", "club brugge kv", "club brugge fc"],
     "como": ["como", "como 1907", "como fc"],
-    "fenerbahce": ["fenerbahce", "fenerbahçe", "fenerbahce istanbul", "fenerbahce sk"],
+    "fenerbahce": ["fenerbahce", "fenerbahГ§e", "fenerbahce istanbul", "fenerbahce sk"],
     "feyenoord": ["feyenoord", "feyenoord rotterdam", "feyenoord fc"],
     "galatasaray": ["galatasaray", "galatasaray istanbul", "galatasaray sk"],
     "inter": ["inter", "inter milan", "internazionale", "internazionale milano", "fc internazionale milano", "inter milano"],
@@ -745,7 +745,7 @@ CL_TEAM_CANONICAL = {
     "paris saint germain": ["paris", "psg", "paris saint germain", "paris saint-germain", "paris sg", "paris saint germain fc"],
     "porto": ["porto", "fc porto", "fc porto portugal"],
     "psv eindhoven": ["psv", "psv eindhoven", "psv eindhoven fc", "psv eindhoven nv"],
-    "real betis": ["real betis", "real betis balompie", "real betis balompié", "real betis seville", "real betis sevilla"],
+    "real betis": ["real betis", "real betis balompie", "real betis balompiГ©", "real betis seville", "real betis sevilla"],
     "real madrid": ["real madrid", "real madrid cf", "real madrid fc"],
     "roma": ["roma", "as roma", "as roma fc", "roma fc"],
     "sabah": ["sabah", "sabah fk", "sabah fc"],
@@ -759,22 +759,22 @@ CL_TEAM_CANONICAL = {
 }
 
 CL_TEAM_LOCAL_ALIASES = {
-    "аек афіни": "aek athens", "пае аек": "aek athens", "аек": "aek athens",
-    "арсенал": "arsenal", "астон вілла": "aston villa",
-    "атлетіко": "atletico madrid", "атлетико": "atletico madrid", "атлетіко мадрид": "atletico madrid", "атлетико мадрид": "atletico madrid",
-    "барселона": "barcelona", "баварія": "bayern munich", "бавария": "bayern munich",
-    "боруссія дортмунд": "borussia dortmund", "боруссия дортмунд": "borussia dortmund", "дортмунд": "borussia dortmund",
-    "бодо глімт": "bodo glimt", "бодо глимт": "bodo glimt", "клуб брюгге": "club brugge", "комо": "como",
-    "фенербахче": "fenerbahce", "фенербахче": "fenerbahce", "фейєноорд": "feyenoord", "фейеноорд": "feyenoord", "феєнорд": "feyenoord",
-    "галатасарай": "galatasaray", "інтер": "inter", "інтер мілан": "inter", "интер": "inter", "интер милан": "inter",
-    "ласк": "lask", "ласк лінц": "lask", "ласк линц": "lask", "лайпциг": "leipzig", "рб лайпциг": "leipzig", "ланс": "lens", "ліль": "lille", "лиль": "lille",
-    "ліверпуль": "liverpool", "ливерпуль": "liverpool", "манчестер сіті": "manchester city", "манчестер сити": "manchester city", "ман сіті": "manchester city", "ман сити": "manchester city",
-    "манчестер юнайтед": "manchester united", "манчестер юнайтед": "manchester united", "ман юнайтед": "manchester united", "ман юнайтед": "manchester united",
-    "наполи": "napoli", "неаполь": "napoli", "псж": "paris saint germain", "парі сен жермен": "paris saint germain", "париж": "paris saint germain", "пари сен жермен": "paris saint germain",
-    "порту": "porto", "псв": "psv eindhoven", "псв ейндховен": "psv eindhoven", "реал бетіс": "real betis", "реал бетис": "real betis", "бетіс": "real betis", "бетис": "real betis",
-    "реал мадрид": "real madrid", "рома": "roma", "сабах": "sabah", "шахтар": "shakhtar donetsk", "шахтар донецьк": "shakhtar donetsk", "шахтер": "shakhtar donetsk", "шахтер донецк": "shakhtar donetsk",
-    "славія прага": "slavia praha", "славия прага": "slavia praha", "славія": "slavia praha", "славия": "slavia praha", "слован братислава": "slovan bratislava", "слован": "slovan bratislava",
-    "спортинг": "sporting cp", "спортінг": "sporting cp", "спортинг лісабон": "sporting cp", "спортинг лиссабон": "sporting cp", "штутгарт": "stuttgart", "вікінг": "viking", "викинг": "viking", "вільярреал": "villarreal", "вильярреал": "villarreal",
+    "Р°РµРє Р°С„С–РЅРё": "aek athens", "РїР°Рµ Р°РµРє": "aek athens", "Р°РµРє": "aek athens",
+    "Р°СЂСЃРµРЅР°Р»": "arsenal", "Р°СЃС‚РѕРЅ РІС–Р»Р»Р°": "aston villa",
+    "Р°С‚Р»РµС‚С–РєРѕ": "atletico madrid", "Р°С‚Р»РµС‚РёРєРѕ": "atletico madrid", "Р°С‚Р»РµС‚С–РєРѕ РјР°РґСЂРёРґ": "atletico madrid", "Р°С‚Р»РµС‚РёРєРѕ РјР°РґСЂРёРґ": "atletico madrid",
+    "Р±Р°СЂСЃРµР»РѕРЅР°": "barcelona", "Р±Р°РІР°СЂС–СЏ": "bayern munich", "Р±Р°РІР°СЂРёСЏ": "bayern munich",
+    "Р±РѕСЂСѓСЃСЃС–СЏ РґРѕСЂС‚РјСѓРЅРґ": "borussia dortmund", "Р±РѕСЂСѓСЃСЃРёСЏ РґРѕСЂС‚РјСѓРЅРґ": "borussia dortmund", "РґРѕСЂС‚РјСѓРЅРґ": "borussia dortmund",
+    "Р±РѕРґРѕ РіР»С–РјС‚": "bodo glimt", "Р±РѕРґРѕ РіР»РёРјС‚": "bodo glimt", "РєР»СѓР± Р±СЂСЋРіРіРµ": "club brugge", "РєРѕРјРѕ": "como",
+    "С„РµРЅРµСЂР±Р°С…С‡Рµ": "fenerbahce", "С„РµРЅРµСЂР±Р°С…С‡Рµ": "fenerbahce", "С„РµР№С”РЅРѕРѕСЂРґ": "feyenoord", "С„РµР№РµРЅРѕРѕСЂРґ": "feyenoord", "С„РµС”РЅРѕСЂРґ": "feyenoord",
+    "РіР°Р»Р°С‚Р°СЃР°СЂР°Р№": "galatasaray", "С–РЅС‚РµСЂ": "inter", "С–РЅС‚РµСЂ РјС–Р»Р°РЅ": "inter", "РёРЅС‚РµСЂ": "inter", "РёРЅС‚РµСЂ РјРёР»Р°РЅ": "inter",
+    "Р»Р°СЃРє": "lask", "Р»Р°СЃРє Р»С–РЅС†": "lask", "Р»Р°СЃРє Р»РёРЅС†": "lask", "Р»Р°Р№РїС†РёРі": "leipzig", "СЂР± Р»Р°Р№РїС†РёРі": "leipzig", "Р»Р°РЅСЃ": "lens", "Р»С–Р»СЊ": "lille", "Р»РёР»СЊ": "lille",
+    "Р»С–РІРµСЂРїСѓР»СЊ": "liverpool", "Р»РёРІРµСЂРїСѓР»СЊ": "liverpool", "РјР°РЅС‡РµСЃС‚РµСЂ СЃС–С‚С–": "manchester city", "РјР°РЅС‡РµСЃС‚РµСЂ СЃРёС‚Рё": "manchester city", "РјР°РЅ СЃС–С‚С–": "manchester city", "РјР°РЅ СЃРёС‚Рё": "manchester city",
+    "РјР°РЅС‡РµСЃС‚РµСЂ СЋРЅР°Р№С‚РµРґ": "manchester united", "РјР°РЅС‡РµСЃС‚РµСЂ СЋРЅР°Р№С‚РµРґ": "manchester united", "РјР°РЅ СЋРЅР°Р№С‚РµРґ": "manchester united", "РјР°РЅ СЋРЅР°Р№С‚РµРґ": "manchester united",
+    "РЅР°РїРѕР»Рё": "napoli", "РЅРµР°РїРѕР»СЊ": "napoli", "РїСЃР¶": "paris saint germain", "РїР°СЂС– СЃРµРЅ Р¶РµСЂРјРµРЅ": "paris saint germain", "РїР°СЂРёР¶": "paris saint germain", "РїР°СЂРё СЃРµРЅ Р¶РµСЂРјРµРЅ": "paris saint germain",
+    "РїРѕСЂС‚Сѓ": "porto", "РїСЃРІ": "psv eindhoven", "РїСЃРІ РµР№РЅРґС…РѕРІРµРЅ": "psv eindhoven", "СЂРµР°Р» Р±РµС‚С–СЃ": "real betis", "СЂРµР°Р» Р±РµС‚РёСЃ": "real betis", "Р±РµС‚С–СЃ": "real betis", "Р±РµС‚РёСЃ": "real betis",
+    "СЂРµР°Р» РјР°РґСЂРёРґ": "real madrid", "СЂРѕРјР°": "roma", "СЃР°Р±Р°С…": "sabah", "С€Р°С…С‚Р°СЂ": "shakhtar donetsk", "С€Р°С…С‚Р°СЂ РґРѕРЅРµС†СЊРє": "shakhtar donetsk", "С€Р°С…С‚РµСЂ": "shakhtar donetsk", "С€Р°С…С‚РµСЂ РґРѕРЅРµС†Рє": "shakhtar donetsk",
+    "СЃР»Р°РІС–СЏ РїСЂР°РіР°": "slavia praha", "СЃР»Р°РІРёСЏ РїСЂР°РіР°": "slavia praha", "СЃР»Р°РІС–СЏ": "slavia praha", "СЃР»Р°РІРёСЏ": "slavia praha", "СЃР»РѕРІР°РЅ Р±СЂР°С‚РёСЃР»Р°РІР°": "slovan bratislava", "СЃР»РѕРІР°РЅ": "slovan bratislava",
+    "СЃРїРѕСЂС‚РёРЅРі": "sporting cp", "СЃРїРѕСЂС‚С–РЅРі": "sporting cp", "СЃРїРѕСЂС‚РёРЅРі Р»С–СЃР°Р±РѕРЅ": "sporting cp", "СЃРїРѕСЂС‚РёРЅРі Р»РёСЃСЃР°Р±РѕРЅ": "sporting cp", "С€С‚СѓС‚РіР°СЂС‚": "stuttgart", "РІС–РєС–РЅРі": "viking", "РІРёРєРёРЅРі": "viking", "РІС–Р»СЊСЏСЂСЂРµР°Р»": "villarreal", "РІРёР»СЊСЏСЂСЂРµР°Р»": "villarreal",
 }
 
 
@@ -802,161 +802,161 @@ for _alias, _canonical in CL_TEAM_LOCAL_ALIASES.items():
 # ============================================================
 # RUSSIAN TEAM SEARCH ALIASES
 # ============================================================
-# Пользователь может вводить названия клубов кириллицей по-русски.
-# Значения справа — реальные названия/варианты Football-Data.org.
+# РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РІРІРѕРґРёС‚СЊ РЅР°Р·РІР°РЅРёСЏ РєР»СѓР±РѕРІ РєРёСЂРёР»Р»РёС†РµР№ РїРѕ-СЂСѓСЃСЃРєРё.
+# Р—РЅР°С‡РµРЅРёСЏ СЃРїСЂР°РІР° вЂ” СЂРµР°Р»СЊРЅС‹Рµ РЅР°Р·РІР°РЅРёСЏ/РІР°СЂРёР°РЅС‚С‹ Football-Data.org.
 RUSSIAN_TEAM_ALIASES = {
     # England
-    "арсенал": ["arsenal", "arsenal fc"],
-    "астон вилла": ["aston villa", "aston villa fc"],
-    "брентфорд": ["brentford", "brentford fc"],
-    "брайтон": ["brighton", "brighton and hove albion", "brighton hove albion"],
-    "бернли": ["burnley", "burnley fc"],
-    "борнмут": ["bournemouth", "afc bournemouth"],
-    "вест хэм": ["west ham", "west ham united"],
-    "вест хем": ["west ham", "west ham united"],
-    "вулверхэмптон": ["wolves", "wolverhampton", "wolverhampton wanderers"],
-    "вулверхемптон": ["wolves", "wolverhampton", "wolverhampton wanderers"],
-    "кристал пэлас": ["crystal palace"],
-    "кристал пелас": ["crystal palace"],
-    "ливерпуль": ["liverpool", "liverpool fc"],
-    "манчестер сити": ["manchester city", "man city"],
-    "ман сити": ["manchester city", "man city"],
-    "манчестер юнайтед": ["manchester united", "man united", "man utd"],
-    "ман юнайтед": ["manchester united", "man united", "man utd"],
-    "ньюкасл": ["newcastle", "newcastle united"],
-    "ноттингем": ["nottingham forest"],
-    "ноттингем форест": ["nottingham forest"],
-    "тоттенхэм": ["tottenham", "tottenham hotspur"],
-    "тоттенхем": ["tottenham", "tottenham hotspur"],
-    "челси": ["chelsea", "chelsea fc"],
-    "фулхэм": ["fulham"],
-    "фулхем": ["fulham"],
-    "эвертон": ["everton", "everton fc"],
-    "ипсвич": ["ipswich", "ipswich town"],
-    "лидс": ["leeds", "leeds united"],
-    "сандерленд": ["sunderland", "sunderland afc"],
+    "Р°СЂСЃРµРЅР°Р»": ["arsenal", "arsenal fc"],
+    "Р°СЃС‚РѕРЅ РІРёР»Р»Р°": ["aston villa", "aston villa fc"],
+    "Р±СЂРµРЅС‚С„РѕСЂРґ": ["brentford", "brentford fc"],
+    "Р±СЂР°Р№С‚РѕРЅ": ["brighton", "brighton and hove albion", "brighton hove albion"],
+    "Р±РµСЂРЅР»Рё": ["burnley", "burnley fc"],
+    "Р±РѕСЂРЅРјСѓС‚": ["bournemouth", "afc bournemouth"],
+    "РІРµСЃС‚ С…СЌРј": ["west ham", "west ham united"],
+    "РІРµСЃС‚ С…РµРј": ["west ham", "west ham united"],
+    "РІСѓР»РІРµСЂС…СЌРјРїС‚РѕРЅ": ["wolves", "wolverhampton", "wolverhampton wanderers"],
+    "РІСѓР»РІРµСЂС…РµРјРїС‚РѕРЅ": ["wolves", "wolverhampton", "wolverhampton wanderers"],
+    "РєСЂРёСЃС‚Р°Р» РїСЌР»Р°СЃ": ["crystal palace"],
+    "РєСЂРёСЃС‚Р°Р» РїРµР»Р°СЃ": ["crystal palace"],
+    "Р»РёРІРµСЂРїСѓР»СЊ": ["liverpool", "liverpool fc"],
+    "РјР°РЅС‡РµСЃС‚РµСЂ СЃРёС‚Рё": ["manchester city", "man city"],
+    "РјР°РЅ СЃРёС‚Рё": ["manchester city", "man city"],
+    "РјР°РЅС‡РµСЃС‚РµСЂ СЋРЅР°Р№С‚РµРґ": ["manchester united", "man united", "man utd"],
+    "РјР°РЅ СЋРЅР°Р№С‚РµРґ": ["manchester united", "man united", "man utd"],
+    "РЅСЊСЋРєР°СЃР»": ["newcastle", "newcastle united"],
+    "РЅРѕС‚С‚РёРЅРіРµРј": ["nottingham forest"],
+    "РЅРѕС‚С‚РёРЅРіРµРј С„РѕСЂРµСЃС‚": ["nottingham forest"],
+    "С‚РѕС‚С‚РµРЅС…СЌРј": ["tottenham", "tottenham hotspur"],
+    "С‚РѕС‚С‚РµРЅС…РµРј": ["tottenham", "tottenham hotspur"],
+    "С‡РµР»СЃРё": ["chelsea", "chelsea fc"],
+    "С„СѓР»С…СЌРј": ["fulham"],
+    "С„СѓР»С…РµРј": ["fulham"],
+    "СЌРІРµСЂС‚РѕРЅ": ["everton", "everton fc"],
+    "РёРїСЃРІРёС‡": ["ipswich", "ipswich town"],
+    "Р»РёРґСЃ": ["leeds", "leeds united"],
+    "СЃР°РЅРґРµСЂР»РµРЅРґ": ["sunderland", "sunderland afc"],
 
     # Spain
-    "барселона": ["barcelona", "fc barcelona", "barca"],
-    "реал мадрид": ["real madrid", "real madrid cf"],
-    "реал": ["real madrid"],
-    "атлетико мадрид": ["atletico madrid", "atletico de madrid"],
-    "атлетико": ["atletico madrid", "atletico de madrid"],
-    "севилья": ["sevilla", "sevilla fc"],
-    "вильярреал": ["villarreal", "villarreal cf"],
-    "бетис": ["real betis", "real betis balompie", "real betis balompié"],
-    "реал бетис": ["real betis", "real betis balompie", "real betis balompié"],
-    "валенсия": ["valencia", "valencia cf"],
-    "реал сосьедад": ["real sociedad"],
-    "атлетик бильбао": ["athletic club", "athletic bilbao"],
-    "бильбао": ["athletic club", "athletic bilbao"],
-    "атлетик": ["athletic club", "athletic bilbao"],
-    "осасуна": ["osasuna", "ca osasuna"],
-    "мальорка": ["mallorca", "rcd mallorca"],
-    "майорка": ["mallorca", "rcd mallorca"],
-    "хетафе": ["getafe", "getafe cf"],
-    "селта": ["celta", "celta vigo", "rc celta"],
-    "селта виго": ["celta", "celta vigo", "rc celta"],
-    "жирона": ["girona", "girona fc"],
-    "райо вальекано": ["rayo vallecano"],
-    "альмерия": ["almeria", "ud almeria"],
-    "малага": ["malaga", "malaga cf"],
-    "эспаньол": ["espanyol", "rcd espanyol"],
-    "эспаньол барселона": ["espanyol", "rcd espanyol"],
-    "алавес": ["alaves", "deportivo alaves", "deportivo alavés"],
-    "леванте": ["levante", "levante ud"],
-    "эльче": ["elche", "elche cf"],
-    "расинг сантандер": ["racing santander", "real racing club de santander"],
-    "депортиво": ["deportivo la coruna", "deportivo la coruña"],
+    "Р±Р°СЂСЃРµР»РѕРЅР°": ["barcelona", "fc barcelona", "barca"],
+    "СЂРµР°Р» РјР°РґСЂРёРґ": ["real madrid", "real madrid cf"],
+    "СЂРµР°Р»": ["real madrid"],
+    "Р°С‚Р»РµС‚РёРєРѕ РјР°РґСЂРёРґ": ["atletico madrid", "atletico de madrid"],
+    "Р°С‚Р»РµС‚РёРєРѕ": ["atletico madrid", "atletico de madrid"],
+    "СЃРµРІРёР»СЊСЏ": ["sevilla", "sevilla fc"],
+    "РІРёР»СЊСЏСЂСЂРµР°Р»": ["villarreal", "villarreal cf"],
+    "Р±РµС‚РёСЃ": ["real betis", "real betis balompie", "real betis balompiГ©"],
+    "СЂРµР°Р» Р±РµС‚РёСЃ": ["real betis", "real betis balompie", "real betis balompiГ©"],
+    "РІР°Р»РµРЅСЃРёСЏ": ["valencia", "valencia cf"],
+    "СЂРµР°Р» СЃРѕСЃСЊРµРґР°Рґ": ["real sociedad"],
+    "Р°С‚Р»РµС‚РёРє Р±РёР»СЊР±Р°Рѕ": ["athletic club", "athletic bilbao"],
+    "Р±РёР»СЊР±Р°Рѕ": ["athletic club", "athletic bilbao"],
+    "Р°С‚Р»РµС‚РёРє": ["athletic club", "athletic bilbao"],
+    "РѕСЃР°СЃСѓРЅР°": ["osasuna", "ca osasuna"],
+    "РјР°Р»СЊРѕСЂРєР°": ["mallorca", "rcd mallorca"],
+    "РјР°Р№РѕСЂРєР°": ["mallorca", "rcd mallorca"],
+    "С…РµС‚Р°С„Рµ": ["getafe", "getafe cf"],
+    "СЃРµР»С‚Р°": ["celta", "celta vigo", "rc celta"],
+    "СЃРµР»С‚Р° РІРёРіРѕ": ["celta", "celta vigo", "rc celta"],
+    "Р¶РёСЂРѕРЅР°": ["girona", "girona fc"],
+    "СЂР°Р№Рѕ РІР°Р»СЊРµРєР°РЅРѕ": ["rayo vallecano"],
+    "Р°Р»СЊРјРµСЂРёСЏ": ["almeria", "ud almeria"],
+    "РјР°Р»Р°РіР°": ["malaga", "malaga cf"],
+    "СЌСЃРїР°РЅСЊРѕР»": ["espanyol", "rcd espanyol"],
+    "СЌСЃРїР°РЅСЊРѕР» Р±Р°СЂСЃРµР»РѕРЅР°": ["espanyol", "rcd espanyol"],
+    "Р°Р»Р°РІРµСЃ": ["alaves", "deportivo alaves", "deportivo alavГ©s"],
+    "Р»РµРІР°РЅС‚Рµ": ["levante", "levante ud"],
+    "СЌР»СЊС‡Рµ": ["elche", "elche cf"],
+    "СЂР°СЃРёРЅРі СЃР°РЅС‚Р°РЅРґРµСЂ": ["racing santander", "real racing club de santander"],
+    "РґРµРїРѕСЂС‚РёРІРѕ": ["deportivo la coruna", "deportivo la coruГ±a"],
 
     # Italy
-    "ювентус": ["juventus", "juventus fc"],
-    "интер": ["inter", "inter milan", "internazionale", "fc internazionale milano"],
-    "интер милан": ["inter", "inter milan", "internazionale", "fc internazionale milano"],
-    "милан": ["milan", "ac milan"],
-    "рома": ["roma", "as roma"],
-    "лацио": ["lazio", "ss lazio"],
-    "наполи": ["napoli", "ssc napoli"],
-    "неаполь": ["napoli", "ssc napoli"],
-    "фиорентина": ["fiorentina", "acf fiorentina"],
-    "болонья": ["bologna"],
-    "торино": ["torino"],
-    "дженоа": ["genoa"],
-    "генуя": ["genoa"],
-    "аталанта": ["atalanta"],
-    "удинезе": ["udinese"],
-    "лечче": ["lecce"],
-    "монца": ["monza"],
-    "кальяри": ["cagliari", "cagliari calcio"],
-    "комо": ["como", "como 1907", "como fc"],
-    "парма": ["parma", "parma calcio", "parma calcio 1913"],
-    "сассуоло": ["sassuolo", "us sassuolo calcio"],
-    "венеция": ["venezia", "venezia fc"],
-    "фрозиноне": ["frosinone", "frosinone calcio"],
+    "СЋРІРµРЅС‚СѓСЃ": ["juventus", "juventus fc"],
+    "РёРЅС‚РµСЂ": ["inter", "inter milan", "internazionale", "fc internazionale milano"],
+    "РёРЅС‚РµСЂ РјРёР»Р°РЅ": ["inter", "inter milan", "internazionale", "fc internazionale milano"],
+    "РјРёР»Р°РЅ": ["milan", "ac milan"],
+    "СЂРѕРјР°": ["roma", "as roma"],
+    "Р»Р°С†РёРѕ": ["lazio", "ss lazio"],
+    "РЅР°РїРѕР»Рё": ["napoli", "ssc napoli"],
+    "РЅРµР°РїРѕР»СЊ": ["napoli", "ssc napoli"],
+    "С„РёРѕСЂРµРЅС‚РёРЅР°": ["fiorentina", "acf fiorentina"],
+    "Р±РѕР»РѕРЅСЊСЏ": ["bologna"],
+    "С‚РѕСЂРёРЅРѕ": ["torino"],
+    "РґР¶РµРЅРѕР°": ["genoa"],
+    "РіРµРЅСѓСЏ": ["genoa"],
+    "Р°С‚Р°Р»Р°РЅС‚Р°": ["atalanta"],
+    "СѓРґРёРЅРµР·Рµ": ["udinese"],
+    "Р»РµС‡С‡Рµ": ["lecce"],
+    "РјРѕРЅС†Р°": ["monza"],
+    "РєР°Р»СЊСЏСЂРё": ["cagliari", "cagliari calcio"],
+    "РєРѕРјРѕ": ["como", "como 1907", "como fc"],
+    "РїР°СЂРјР°": ["parma", "parma calcio", "parma calcio 1913"],
+    "СЃР°СЃСЃСѓРѕР»Рѕ": ["sassuolo", "us sassuolo calcio"],
+    "РІРµРЅРµС†РёСЏ": ["venezia", "venezia fc"],
+    "С„СЂРѕР·РёРЅРѕРЅРµ": ["frosinone", "frosinone calcio"],
 
     # Germany
-    "бавария": ["bayern", "bayern munich", "bayern munchen", "bayern münchen", "fc bayern munich"],
-    "бавария мюнхен": ["bayern", "bayern munich", "bayern munchen", "bayern münchen"],
-    "боруссия дортмунд": ["borussia dortmund", "bvb", "bvb 09"],
-    "дортмунд": ["borussia dortmund", "bvb"],
-    "байер": ["bayer leverkusen", "bayer 04 leverkusen", "bayer"],
-    "байер леверкузен": ["bayer leverkusen", "bayer 04 leverkusen"],
-    "лейпциг": ["rb leipzig", "rasenballsport leipzig"],
-    "рб лейпциг": ["rb leipzig", "rasenballsport leipzig"],
-    "шальке": ["schalke 04", "fc schalke 04"],
-    "вольфсбург": ["wolfsburg", "vfl wolfsburg"],
-    "штутгарт": ["stuttgart", "vfb stuttgart"],
-    "фрайбург": ["freiburg", "sc freiburg"],
-    "хоффенхайм": ["hoffenheim", "tsg hoffenheim"],
-    "хоффенгайм": ["hoffenheim", "tsg hoffenheim"],
-    "майнц": ["mainz", "mainz 05"],
-    "вердер": ["werder bremen"],
-    "вердер бремен": ["werder bremen"],
-    "айнтрахт": ["eintracht frankfurt"],
-    "айнтрахт франкфурт": ["eintracht frankfurt"],
-    "унион берлин": ["union berlin"],
-    "боруссия менхенгладбах": ["borussia monchengladbach", "borussia mönchengladbach", "gladbach"],
-    "гладбах": ["borussia monchengladbach", "borussia mönchengladbach", "gladbach"],
-    "аугсбург": ["augsburg", "fc augsburg"],
-    "кельн": ["koln", "köln", "fc koln", "1. fc köln"],
-    "гамбург": ["hamburger sv", "hamburg"],
-    "хайденхайм": ["heidenheim", "1. fc heidenheim"],
+    "Р±Р°РІР°СЂРёСЏ": ["bayern", "bayern munich", "bayern munchen", "bayern mГјnchen", "fc bayern munich"],
+    "Р±Р°РІР°СЂРёСЏ РјСЋРЅС…РµРЅ": ["bayern", "bayern munich", "bayern munchen", "bayern mГјnchen"],
+    "Р±РѕСЂСѓСЃСЃРёСЏ РґРѕСЂС‚РјСѓРЅРґ": ["borussia dortmund", "bvb", "bvb 09"],
+    "РґРѕСЂС‚РјСѓРЅРґ": ["borussia dortmund", "bvb"],
+    "Р±Р°Р№РµСЂ": ["bayer leverkusen", "bayer 04 leverkusen", "bayer"],
+    "Р±Р°Р№РµСЂ Р»РµРІРµСЂРєСѓР·РµРЅ": ["bayer leverkusen", "bayer 04 leverkusen"],
+    "Р»РµР№РїС†РёРі": ["rb leipzig", "rasenballsport leipzig"],
+    "СЂР± Р»РµР№РїС†РёРі": ["rb leipzig", "rasenballsport leipzig"],
+    "С€Р°Р»СЊРєРµ": ["schalke 04", "fc schalke 04"],
+    "РІРѕР»СЊС„СЃР±СѓСЂРі": ["wolfsburg", "vfl wolfsburg"],
+    "С€С‚СѓС‚РіР°СЂС‚": ["stuttgart", "vfb stuttgart"],
+    "С„СЂР°Р№Р±СѓСЂРі": ["freiburg", "sc freiburg"],
+    "С…РѕС„С„РµРЅС…Р°Р№Рј": ["hoffenheim", "tsg hoffenheim"],
+    "С…РѕС„С„РµРЅРіР°Р№Рј": ["hoffenheim", "tsg hoffenheim"],
+    "РјР°Р№РЅС†": ["mainz", "mainz 05"],
+    "РІРµСЂРґРµСЂ": ["werder bremen"],
+    "РІРµСЂРґРµСЂ Р±СЂРµРјРµРЅ": ["werder bremen"],
+    "Р°Р№РЅС‚СЂР°С…С‚": ["eintracht frankfurt"],
+    "Р°Р№РЅС‚СЂР°С…С‚ С„СЂР°РЅРєС„СѓСЂС‚": ["eintracht frankfurt"],
+    "СѓРЅРёРѕРЅ Р±РµСЂР»РёРЅ": ["union berlin"],
+    "Р±РѕСЂСѓСЃСЃРёСЏ РјРµРЅС…РµРЅРіР»Р°РґР±Р°С…": ["borussia monchengladbach", "borussia mГ¶nchengladbach", "gladbach"],
+    "РіР»Р°РґР±Р°С…": ["borussia monchengladbach", "borussia mГ¶nchengladbach", "gladbach"],
+    "Р°СѓРіСЃР±СѓСЂРі": ["augsburg", "fc augsburg"],
+    "РєРµР»СЊРЅ": ["koln", "kГ¶ln", "fc koln", "1. fc kГ¶ln"],
+    "РіР°РјР±СѓСЂРі": ["hamburger sv", "hamburg"],
+    "С…Р°Р№РґРµРЅС…Р°Р№Рј": ["heidenheim", "1. fc heidenheim"],
 
     # France
-    "псж": ["paris saint germain", "paris saint-germain", "psg"],
-    "пари сен жермен": ["paris saint germain", "paris saint-germain", "psg"],
-    "марсель": ["marseille", "olympique de marseille", "om"],
-    "лион": ["lyon", "olympique lyonnais", "olympique lyon"],
-    "ренн": ["rennes", "stade rennais"],
-    "монако": ["monaco", "as monaco"],
-    "лиль": ["lille", "lille osc", "losc lille"],
-    "ницца": ["nice", "ogc nice"],
-    "ланс": ["lens", "rc lens"],
-    "тулуза": ["toulouse"],
-    "монпелье": ["montpellier"],
-    "нант": ["nantes"],
-    "страсбур": ["strasbourg"],
-    "страсбург": ["strasbourg"],
-    "брест": ["brest", "stade brestois 29"],
-    "реймс": ["reims", "stade de reims"],
-    "осер": ["auxerre", "aj auxerre"],
+    "РїСЃР¶": ["paris saint germain", "paris saint-germain", "psg"],
+    "РїР°СЂРё СЃРµРЅ Р¶РµСЂРјРµРЅ": ["paris saint germain", "paris saint-germain", "psg"],
+    "РјР°СЂСЃРµР»СЊ": ["marseille", "olympique de marseille", "om"],
+    "Р»РёРѕРЅ": ["lyon", "olympique lyonnais", "olympique lyon"],
+    "СЂРµРЅРЅ": ["rennes", "stade rennais"],
+    "РјРѕРЅР°РєРѕ": ["monaco", "as monaco"],
+    "Р»РёР»СЊ": ["lille", "lille osc", "losc lille"],
+    "РЅРёС†С†Р°": ["nice", "ogc nice"],
+    "Р»Р°РЅСЃ": ["lens", "rc lens"],
+    "С‚СѓР»СѓР·Р°": ["toulouse"],
+    "РјРѕРЅРїРµР»СЊРµ": ["montpellier"],
+    "РЅР°РЅС‚": ["nantes"],
+    "СЃС‚СЂР°СЃР±СѓСЂ": ["strasbourg"],
+    "СЃС‚СЂР°СЃР±СѓСЂРі": ["strasbourg"],
+    "Р±СЂРµСЃС‚": ["brest", "stade brestois 29"],
+    "СЂРµР№РјСЃ": ["reims", "stade de reims"],
+    "РѕСЃРµСЂ": ["auxerre", "aj auxerre"],
 
     # Champions League / common European clubs
-    "шахтер": ["shakhtar", "shakhtar donetsk", "fc shakhtar donetsk"],
-    "шахтер донецк": ["shakhtar", "shakhtar donetsk", "fc shakhtar donetsk"],
-    "порту": ["porto", "fc porto"],
-    "спортинг": ["sporting cp", "sporting lisbon", "sporting clube de portugal"],
-    "спортинг лиссабон": ["sporting cp", "sporting lisbon"],
-    "галатасарай": ["galatasaray", "galatasaray sk"],
-    "фенербахче": ["fenerbahce", "fenerbahçe", "fenerbahce sk"],
-    "фейеноорд": ["feyenoord", "feyenoord rotterdam"],
-    "псв": ["psv", "psv eindhoven"],
-    "клуб брюгге": ["club brugge", "club brugge kv"],
-    "славия прага": ["slavia praha", "slavia prague"],
-    "слован братислава": ["slovan bratislava", "sk slovan bratislava"],
-    "аек афины": ["aek athens", "aek fc"],
-    "будё глимт": ["bodo glimt", "bodoe glimt", "bodo/glimt"],
-    "бодо глимт": ["bodo glimt", "bodoe glimt", "bodo/glimt"],
+    "С€Р°С…С‚РµСЂ": ["shakhtar", "shakhtar donetsk", "fc shakhtar donetsk"],
+    "С€Р°С…С‚РµСЂ РґРѕРЅРµС†Рє": ["shakhtar", "shakhtar donetsk", "fc shakhtar donetsk"],
+    "РїРѕСЂС‚Сѓ": ["porto", "fc porto"],
+    "СЃРїРѕСЂС‚РёРЅРі": ["sporting cp", "sporting lisbon", "sporting clube de portugal"],
+    "СЃРїРѕСЂС‚РёРЅРі Р»РёСЃСЃР°Р±РѕРЅ": ["sporting cp", "sporting lisbon"],
+    "РіР°Р»Р°С‚Р°СЃР°СЂР°Р№": ["galatasaray", "galatasaray sk"],
+    "С„РµРЅРµСЂР±Р°С…С‡Рµ": ["fenerbahce", "fenerbahГ§e", "fenerbahce sk"],
+    "С„РµР№РµРЅРѕРѕСЂРґ": ["feyenoord", "feyenoord rotterdam"],
+    "РїСЃРІ": ["psv", "psv eindhoven"],
+    "РєР»СѓР± Р±СЂСЋРіРіРµ": ["club brugge", "club brugge kv"],
+    "СЃР»Р°РІРёСЏ РїСЂР°РіР°": ["slavia praha", "slavia prague"],
+    "СЃР»РѕРІР°РЅ Р±СЂР°С‚РёСЃР»Р°РІР°": ["slovan bratislava", "sk slovan bratislava"],
+    "Р°РµРє Р°С„РёРЅС‹": ["aek athens", "aek fc"],
+    "Р±СѓРґС‘ РіР»РёРјС‚": ["bodo glimt", "bodoe glimt", "bodo/glimt"],
+    "Р±РѕРґРѕ РіР»РёРјС‚": ["bodo glimt", "bodoe glimt", "bodo/glimt"],
 }
 
 # Merge Russian aliases into the same universal search dictionary.
@@ -1256,8 +1256,8 @@ async def football_api_get(
                     # the caller keeps the seasons that were already loaded.
                     if attempt == retries - 1:
                         print(
-                            f"⚠️ Football API 429 → ліміт не відпустив "
-                            f"({attempt + 1}/{retries}), використовуємо часткову історію"
+                            f"вљ пёЏ Football API 429 в†’ Р»С–РјС–С‚ РЅРµ РІС–РґРїСѓСЃС‚РёРІ "
+                            f"({attempt + 1}/{retries}), РІРёРєРѕСЂРёСЃС‚РѕРІСѓС”РјРѕ С‡Р°СЃС‚РєРѕРІСѓ С–СЃС‚РѕСЂС–СЋ"
                         )
                         break
 
@@ -1271,7 +1271,7 @@ async def football_api_get(
                     delay = fast_delay if server_delay is None else min(server_delay, fast_delay)
                     delay = max(0.75, min(3.0, delay))
                     print(
-                        f"⚠️ Football API 429 → швидкий повтор через {delay:g} с "
+                        f"вљ пёЏ Football API 429 в†’ С€РІРёРґРєРёР№ РїРѕРІС‚РѕСЂ С‡РµСЂРµР· {delay:g} СЃ "
                         f"({attempt + 1}/{retries})"
                     )
                     await asyncio.sleep(delay)
@@ -1332,20 +1332,20 @@ async def odds_api_get(
             text = await response.text()
 
             if response.status != 200:
-                print(f"❌ Odds API {response.status}: {text[:1000]}")
+                print(f"вќЊ Odds API {response.status}: {text[:1000]}")
                 return []
 
             try:
                 data = await response.json(content_type=None)
             except Exception as e:
-                print(f"❌ Odds API JSON error: {e}")
+                print(f"вќЊ Odds API JSON error: {e}")
                 return []
 
             if not isinstance(data, list):
-                print(f"⚠️ Odds API повернув {type(data).__name__}, очікував list")
+                print(f"вљ пёЏ Odds API РїРѕРІРµСЂРЅСѓРІ {type(data).__name__}, РѕС‡С–РєСѓРІР°РІ list")
                 return []
 
-            # Не кешуємо порожню відповідь: матчі можуть з'явитися пізніше.
+            # РќРµ РєРµС€СѓС”РјРѕ РїРѕСЂРѕР¶РЅСЋ РІС–РґРїРѕРІС–РґСЊ: РјР°С‚С‡С– РјРѕР¶СѓС‚СЊ Р·'СЏРІРёС‚РёСЃСЏ РїС–Р·РЅС–С€Рµ.
             if data:
                 ODDS_CACHE[cache_key] = data
 
@@ -1364,10 +1364,10 @@ async def odds_api_get(
             return data
 
     except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-        print(f"❌ Odds API connection error: {e}")
+        print(f"вќЊ Odds API connection error: {e}")
         return []
     except Exception as e:
-        print(f"❌ Odds API error: {e}")
+        print(f"вќЊ Odds API error: {e}")
         return []
 
 
@@ -1396,13 +1396,13 @@ async def odds_api_events_get(sport_key):
             text = await response.text()
 
             if response.status != 200:
-                print(f"⚠️ Odds Events API {response.status}: {text[:700]}")
+                print(f"вљ пёЏ Odds Events API {response.status}: {text[:700]}")
                 return []
 
             try:
                 data = await response.json(content_type=None)
             except Exception as e:
-                print(f"⚠️ Odds Events JSON error: {e}")
+                print(f"вљ пёЏ Odds Events JSON error: {e}")
                 return []
 
             if not isinstance(data, list):
@@ -1412,10 +1412,10 @@ async def odds_api_events_get(sport_key):
             return data
 
     except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-        print(f"⚠️ Odds Events connection error: {e}")
+        print(f"вљ пёЏ Odds Events connection error: {e}")
         return []
     except Exception as e:
-        print(f"⚠️ Odds Events error: {e}")
+        print(f"вљ пёЏ Odds Events error: {e}")
         return []
 
 
@@ -1461,7 +1461,7 @@ async def find_odds_event_across_sports(home_team, away_team, preferred_key=None
         if key and key not in keys:
             keys.append(key)
 
-    print("\n🔎 CROSS-COMPETITION ODDS SEARCH")
+    print("\nрџ”Ћ CROSS-COMPETITION ODDS SEARCH")
 
     for key in keys:
         try:
@@ -1473,10 +1473,10 @@ async def find_odds_event_across_sports(home_team, away_team, preferred_key=None
             # candidates, which is useful when debugging.
             candidate = find_odds_event(events, home_team, away_team)
             if candidate is not None:
-                print(f"🏆 MATCH FOUND IN SPORT: {key}")
+                print(f"рџЏ† MATCH FOUND IN SPORT: {key}")
                 return key, candidate
         except Exception as e:
-            print(f"⚠️ Помилка перевірки {key}: {e}")
+            print(f"вљ пёЏ РџРѕРјРёР»РєР° РїРµСЂРµРІС–СЂРєРё {key}: {e}")
 
     return None, None
 
@@ -1504,22 +1504,22 @@ async def odds_api_event_get(sport_key, event_id, markets="btts"):
         ) as response:
             text = await response.text()
             if response.status != 200:
-                print(f"⚠️ BTTS API {response.status}: {text[:700]}")
+                print(f"вљ пёЏ BTTS API {response.status}: {text[:700]}")
                 return None
 
             try:
                 data = await response.json(content_type=None)
             except Exception as e:
-                print(f"⚠️ BTTS JSON error: {e}")
+                print(f"вљ пёЏ BTTS JSON error: {e}")
                 return None
 
             return data if isinstance(data, dict) else None
 
     except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-        print(f"⚠️ BTTS connection error: {e}")
+        print(f"вљ пёЏ BTTS connection error: {e}")
         return None
     except Exception as e:
-        print(f"⚠️ BTTS error: {e}")
+        print(f"вљ пёЏ BTTS error: {e}")
         return None
 
 
@@ -1539,7 +1539,7 @@ async def load_league_teams(
         ]
 
     print(
-        f"API → {competition_name}"
+        f"API в†’ {competition_name}"
     )
 
     url = (
@@ -1623,7 +1623,7 @@ async def load_league_teams(
         ] = result
 
         print(
-            f"   отримано: {len(result)}"
+            f"   РѕС‚СЂРёРјР°РЅРѕ: {len(result)}"
         )
 
         return result
@@ -1631,7 +1631,7 @@ async def load_league_teams(
     except Exception as e:
 
         print(
-            f"   ⚠️ Помилка: {e}"
+            f"   вљ пёЏ РџРѕРјРёР»РєР°: {e}"
         )
 
         return []
@@ -1641,7 +1641,7 @@ async def load_all_teams():
 
     print()
     print(
-        "Завантаження команд ТОП-5..."
+        "Р—Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ РєРѕРјР°РЅРґ РўРћРџ-5..."
     )
 
     all_teams = []
@@ -1674,7 +1674,7 @@ async def load_all_teams():
     )
 
     print(
-        f"Збережено команд: {len(result)}"
+        f"Р—Р±РµСЂРµР¶РµРЅРѕ РєРѕРјР°РЅРґ: {len(result)}"
     )
 
     return result
@@ -1699,8 +1699,8 @@ async def get_team_history(
     if isinstance(cached_history, list) and cached_history:
         HISTORY_CACHE[team_id] = cached_history
         print(
-            f"⚡ CACHE → історія команди {team_id}: "
-            f"{len(cached_history)} матчів"
+            f"вљЎ CACHE в†’ С–СЃС‚РѕСЂС–СЏ РєРѕРјР°РЅРґРё {team_id}: "
+            f"{len(cached_history)} РјР°С‚С‡С–РІ"
         )
         return cached_history
 
@@ -1713,7 +1713,7 @@ async def get_team_history(
     )
 
     print(
-        f"API → історія команди {team_id}"
+        f"API в†’ С–СЃС‚РѕСЂС–СЏ РєРѕРјР°РЅРґРё {team_id}"
     )
 
     all_matches = []
@@ -1754,7 +1754,7 @@ async def get_team_history(
             )
 
             print(
-                f"   сезон {season}: "
+                f"   СЃРµР·РѕРЅ {season}: "
                 f"{len(matches)}"
             )
 
@@ -1764,15 +1764,15 @@ async def get_team_history(
             # the chance of a 429 without changing the current-form inputs.
             if len(all_matches) >= 30:
                 print(
-                    f"   ⚡ SMART HISTORY: вже {len(all_matches)} матчів, "
-                    f"старіші сезони не запитуємо"
+                    f"   вљЎ SMART HISTORY: РІР¶Рµ {len(all_matches)} РјР°С‚С‡С–РІ, "
+                    f"СЃС‚Р°СЂС–С€С– СЃРµР·РѕРЅРё РЅРµ Р·Р°РїРёС‚СѓС”РјРѕ"
                 )
                 break
 
         except Exception as e:
 
             print(
-                f"   ⚠️ сезон {season}: {e}"
+                f"   вљ пёЏ СЃРµР·РѕРЅ {season}: {e}"
             )
 
         # Small courtesy gap; long waits belong in 429 handling.
@@ -1833,8 +1833,8 @@ async def get_team_history(
     ):
         filtered = stale_history
         print(
-            f"   ♻️ використано попередній кеш історії: "
-            f"{len(filtered)} матчів"
+            f"   в™»пёЏ РІРёРєРѕСЂРёСЃС‚Р°РЅРѕ РїРѕРїРµСЂРµРґРЅС–Р№ РєРµС€ С–СЃС‚РѕСЂС–С—: "
+            f"{len(filtered)} РјР°С‚С‡С–РІ"
         )
 
     HISTORY_CACHE[team_id] = filtered
@@ -1843,7 +1843,7 @@ async def get_team_history(
         _disk_cache_save(disk_key, filtered)
 
     print(
-        f"   історії: {len(filtered)} матчів"
+        f"   С–СЃС‚РѕСЂС–С—: {len(filtered)} РјР°С‚С‡С–РІ"
     )
 
     return filtered
@@ -2676,7 +2676,7 @@ def calculate_xg_v25(
     h2h
 ):
 
-    # Базова атака/захист
+    # Р‘Р°Р·РѕРІР° Р°С‚Р°РєР°/Р·Р°С…РёСЃС‚
     home_xg = (
         home_attack * 0.55
         +
@@ -2689,10 +2689,10 @@ def calculate_xg_v25(
         home_defence * 0.45
     )
 
-    # Домашня перевага
+    # Р”РѕРјР°С€РЅСЏ РїРµСЂРµРІР°РіР°
     home_xg *= 1.08
 
-    # Форма
+    # Р¤РѕСЂРјР°
     if home_form:
         home_xg *= (
             0.90
@@ -2709,7 +2709,7 @@ def calculate_xg_v25(
             / 32
         )
 
-    # H2H — невелика вага
+    # H2H вЂ” РЅРµРІРµР»РёРєР° РІР°РіР°
     if isinstance(h2h, dict) and safe_int(h2h.get("matches")) >= 3:
 
         home_xg = (
@@ -3209,7 +3209,7 @@ def names_match(
         "pae aek": [
             "aek athens",
             "aek",
-            "aeκ athens",
+            "aeОє athens",
         ],
 
         "aek athens": [
@@ -3253,16 +3253,16 @@ def find_odds_event(
 ):
 
     if not events:
-        print("⚠️ Odds API повернув 0 подій")
+        print("вљ пёЏ Odds API РїРѕРІРµСЂРЅСѓРІ 0 РїРѕРґС–Р№")
         return None
 
     target_home = home_team["name"]
     target_away = away_team["name"]
 
     print()
-    print("🔎 ПОШУК МАТЧУ В ODDS API")
+    print("рџ”Ћ РџРћРЁРЈРљ РњРђРўР§РЈ Р’ ODDS API")
     print(f"   Football API: {target_home} - {target_away}")
-    print(f"   Подій у Odds API: {len(events)}")
+    print(f"   РџРѕРґС–Р№ Сѓ Odds API: {len(events)}")
 
     best = None
     best_score = 0.0
@@ -3280,7 +3280,7 @@ def find_odds_event(
         )
 
         # --------------------------------------------
-        # Порівнюємо команди
+        # РџРѕСЂС–РІРЅСЋС”РјРѕ РєРѕРјР°РЅРґРё
         # --------------------------------------------
 
         home_match = names_match(
@@ -3328,11 +3328,11 @@ def find_odds_event(
         )
 
         # --------------------------------------------
-        # Не відкидаємо матч автоматично,
-        # якщо він вже почався.
+        # РќРµ РІС–РґРєРёРґР°С”РјРѕ РјР°С‚С‡ Р°РІС‚РѕРјР°С‚РёС‡РЅРѕ,
+        # СЏРєС‰Рѕ РІС–РЅ РІР¶Рµ РїРѕС‡Р°РІСЃСЏ.
         #
-        # Odds API іноді ще повертає коефіцієнти
-        # для матчу, який щойно почався.
+        # Odds API С–РЅРѕРґС– С‰Рµ РїРѕРІРµСЂС‚Р°С” РєРѕРµС„С–С†С–С”РЅС‚Рё
+        # РґР»СЏ РјР°С‚С‡Сѓ, СЏРєРёР№ С‰РѕР№РЅРѕ РїРѕС‡Р°РІСЃСЏ.
         # --------------------------------------------
 
         hours_difference = abs(
@@ -3358,7 +3358,7 @@ def find_odds_event(
     if best:
 
         print()
-        print("✅ MATCH FOUND IN ODDS API")
+        print("вњ… MATCH FOUND IN ODDS API")
         print(
             f"   {best.get('home_team')} - "
             f"{best.get('away_team')}"
@@ -3371,14 +3371,14 @@ def find_odds_event(
     else:
 
         print()
-        print("❌ MATCH NOT FOUND IN ODDS API")
+        print("вќЊ MATCH NOT FOUND IN ODDS API")
 
-        print("   Приклади подій, які повернув API:")
+        print("   РџСЂРёРєР»Р°РґРё РїРѕРґС–Р№, СЏРєС– РїРѕРІРµСЂРЅСѓРІ API:")
 
         for event in events[:10]:
 
             print(
-                f"   • "
+                f"   вЂў "
                 f"{event.get('home_team')} - "
                 f"{event.get('away_team')}"
             )
@@ -3490,10 +3490,10 @@ def extract_real_odds(event):
         return result
 
     print()
-    print("💰 РЕАЛЬНІ КОЕФІЦІЄНТИ")
+    print("рџ’° Р Р•РђР›Р¬РќР† РљРћР•Р¤Р†Р¦Р†Р„РќРўР")
 
     print(
-        f"Матч: "
+        f"РњР°С‚С‡: "
         f"{event.get('home_team', '')} - "
         f"{event.get('away_team', '')}"
     )
@@ -3507,7 +3507,7 @@ def extract_real_odds(event):
         bookmakers = []
 
     print(
-        f"Букмекерів отримано: {len(bookmakers)}"
+        f"Р‘СѓРєРјРµРєРµСЂС–РІ РѕС‚СЂРёРјР°РЅРѕ: {len(bookmakers)}"
     )
 
     for bookmaker in bookmakers:
@@ -3653,7 +3653,7 @@ def extract_real_odds(event):
                         bookmaker_data["draw"] = price
 
             # =================================================
-            # DOUBLE CHANCE — ТІЛЬКИ РЕАЛЬНИЙ РИНОК ODDS API
+            # DOUBLE CHANCE вЂ” РўР†Р›Р¬РљР Р Р•РђР›Р¬РќРР™ Р РРќРћРљ ODDS API
             # =================================================
 
             elif market_key == "double_chance":
@@ -3674,7 +3674,7 @@ def extract_real_odds(event):
                     if price <= 1:
                         continue
 
-                    # Приклади назв Odds API:
+                    # РџСЂРёРєР»Р°РґРё РЅР°Р·РІ Odds API:
                     # "Chelsea or Draw", "Fulham or Draw", "Chelsea or Fulham"
                     home_name = normalize_name(event.get("home_team", ""))
                     away_name = normalize_name(event.get("away_team", ""))
@@ -3828,17 +3828,17 @@ def extract_real_odds(event):
             f"2={bookmaker_data['away']} | "
             f"1X={bookmaker_data['double_home']} | "
             f"X2={bookmaker_data['double_away']} | "
-            f"ТБ2.5={bookmaker_data['over25']} | "
-            f"ТМ2.5={bookmaker_data['under25']} | "
-            f"ОЗ+={bookmaker_data['btts_yes']} | "
-            f"ОЗ-={bookmaker_data['btts_no']}"
+            f"РўР‘2.5={bookmaker_data['over25']} | "
+            f"РўРњ2.5={bookmaker_data['under25']} | "
+            f"РћР—+={bookmaker_data['btts_yes']} | "
+            f"РћР—-={bookmaker_data['btts_no']}"
         )
 
     print()
-    print("📊 ПІДСУМОК КОЕФІЦІЄНТІВ:")
+    print("рџ“Љ РџР†Р”РЎРЈРњРћРљ РљРћР•Р¤Р†Р¦Р†Р„РќРўР†Р’:")
 
     print(
-        f"   П1: "
+        f"   Рџ1: "
         f"{best_odds(result['home'])}"
     )
 
@@ -3848,7 +3848,7 @@ def extract_real_odds(event):
     )
 
     print(
-        f"   П2: "
+        f"   Рџ2: "
         f"{best_odds(result['away'])}"
     )
 
@@ -3863,22 +3863,22 @@ def extract_real_odds(event):
     )
 
     print(
-        f"   ТБ 2.5: "
+        f"   РўР‘ 2.5: "
         f"{best_odds(result['over25'])}"
     )
 
     print(
-        f"   ТМ 2.5: "
+        f"   РўРњ 2.5: "
         f"{best_odds(result['under25'])}"
     )
 
     print(
-        f"   ОЗ Так: "
+        f"   РћР— РўР°Рє: "
         f"{best_odds(result['btts_yes'])}"
     )
 
     print(
-        f"   ОЗ Ні: "
+        f"   РћР— РќС–: "
         f"{best_odds(result['btts_no'])}"
     )
 
@@ -4432,17 +4432,17 @@ async def _fotmob_load_top5_team_registry(session):
                     total += 1
 
                 print(
-                    f"   📚 FotMob Top-5 registry: {league_code} "
+                    f"   рџ“љ FotMob Top-5 registry: {league_code} "
                     f"-> {len(seen)} teams loaded"
                 )
 
             except Exception as e:
                 print(
-                    f"   ⚠️ FotMob Top-5 registry {league_code}: {e}"
+                    f"   вљ пёЏ FotMob Top-5 registry {league_code}: {e}"
                 )
 
         FOTMOB_TOP5_REGISTRY_LOADED = True
-        print(f"   ✅ FotMob Top-5 registry ready: {total} teams")
+        print(f"   вњ… FotMob Top-5 registry ready: {total} teams")
 
 
 def _fotmob_registry_pick_team_id(team_name):
@@ -4474,7 +4474,7 @@ def _fotmob_registry_pick_team_id(team_name):
 
 
 FOTMOB_KNOWN_TEAM_IDS = {
-    # 2026/27 UEFA Champions League — all 36 league-phase teams.
+    # 2026/27 UEFA Champions League вЂ” all 36 league-phase teams.
     # IDs verified where possible against current FotMob team pages.
     "aek athens": 8563,
     "pae aek": 8563,
@@ -4531,7 +4531,7 @@ FOTMOB_KNOWN_TEAM_IDS = {
     "psv eindhoven": 8640,
     "real betis": 8603,
     "real betis balompie": 8603,
-    "real betis balompié": 8603,
+    "real betis balompiГ©": 8603,
     "real betis seville": 8603,
     "real madrid": 8633,
     "real madrid cf": 8633,
@@ -4603,7 +4603,7 @@ async def fotmob_find_team_id(session, team_name):
             )
             return int(registry_id)
     except Exception as e:
-        print(f"   ⚠️ FotMob Top-5 registry lookup {team_name}: {e}")
+        print(f"   вљ пёЏ FotMob Top-5 registry lookup {team_name}: {e}")
 
     try:
         data = await fotmob_get(
@@ -4620,7 +4620,7 @@ async def fotmob_find_team_id(session, team_name):
             )
             return int(team_id)
     except Exception as e:
-        print(f"   ⚠️ FotMob search {team_name}: {e}")
+        print(f"   вљ пёЏ FotMob search {team_name}: {e}")
 
     try:
         data2 = await fotmob_get(
@@ -4637,9 +4637,9 @@ async def fotmob_find_team_id(session, team_name):
             )
             return int(team_id)
     except Exception as e:
-        print(f"   ⚠️ FotMob legacy search {team_name}: {e}")
+        print(f"   вљ пёЏ FotMob legacy search {team_name}: {e}")
 
-    print(f"   ⚠️ FotMob: team not found: {team_name}")
+    print(f"   вљ пёЏ FotMob: team not found: {team_name}")
     return None
 
 
@@ -5190,7 +5190,7 @@ async def fotmob_match_xg(session, match_id, home_name, away_name, page_url=""):
         return parsed
 
     except Exception as e:
-        print(f"      ⚠️ FotMob match xG {home_name} - {away_name}: {e}")
+        print(f"      вљ пёЏ FotMob match xG {home_name} - {away_name}: {e}")
         FOTMOB_MATCH_CACHE[key] = None
         return None
 
@@ -5250,7 +5250,7 @@ async def _fotmob_load_historical_team_matches(session, target_name, cutoff, lea
                 )
             except Exception as e:
                 print(
-                    f"      ⚠️ FotMob historical league {league_id} "
+                    f"      вљ пёЏ FotMob historical league {league_id} "
                     f"{season}: {e}"
                 )
                 continue
@@ -5278,7 +5278,7 @@ async def _fotmob_load_historical_team_matches(session, target_name, cutoff, lea
 
     if result:
         print(
-            f"      📚 FotMob historical fallback: {len(result)} "
+            f"      рџ“љ FotMob historical fallback: {len(result)} "
             f"older matches found from {len(set(str(x) for x in league_ids))} leagues"
         )
 
@@ -5305,12 +5305,12 @@ async def get_fotmob_xg_for_team(team, before_date, limit=XG_MATCHES):
     if isinstance(cached_result, dict):
         cached_sample = int(cached_result.get("sample") or 0)
         if cached_sample >= limit:
-            print(f"   ⚡ xG CACHE: {target_name} → {cached_sample}/{limit}")
+            print(f"   вљЎ xG CACHE: {target_name} в†’ {cached_sample}/{limit}")
             return cached_result
         if cached_sample > 0:
             print(
-                f"   ♻️ xG CACHE incomplete: {target_name} → "
-                f"{cached_sample}/{limit}; добираємо історію"
+                f"   в™»пёЏ xG CACHE incomplete: {target_name} в†’ "
+                f"{cached_sample}/{limit}; РґРѕР±РёСЂР°С”РјРѕ С–СЃС‚РѕСЂС–СЋ"
             )
 
     empty = {
@@ -5425,8 +5425,8 @@ async def get_fotmob_xg_for_team(team, before_date, limit=XG_MATCHES):
             league_ids = [x for x in league_ids if x not in (None, "", 0)]
             if league_ids:
                 print(
-                    f"      ♻️ xG backfill {target_name}: "
-                    f"{len(records)}/{limit}, добираємо старі матчі"
+                    f"      в™»пёЏ xG backfill {target_name}: "
+                    f"{len(records)}/{limit}, РґРѕР±РёСЂР°С”РјРѕ СЃС‚Р°СЂС– РјР°С‚С‡С–"
                 )
                 historical = await _fotmob_load_historical_team_matches(
                     session, target_name, cutoff, league_ids
@@ -5530,7 +5530,7 @@ async def get_real_xg_for_team(team, before_date, limit=XG_MATCHES):
         if result.get("sample", 0) > 0:
             return result
     except Exception as e:
-        print(f"   ⚠️ FotMob REAL xG error: {e}")
+        print(f"   вљ пёЏ FotMob REAL xG error: {e}")
 
     return empty
 
@@ -5749,15 +5749,15 @@ def find_candidates(probabilities, real_odds, market_consensus=None, real_xg=Non
         return []
 
     markets = [
-        ("home_win", "П1", "home"),
+        ("home_win", "Рџ1", "home"),
         ("draw", "X", "draw"),
-        ("away_win", "П2", "away"),
+        ("away_win", "Рџ2", "away"),
         ("double_home", "1X", "double_home"),
         ("double_away", "X2", "double_away"),
-        ("over_25", "ТБ 2.5", "over25"),
-        ("under_25", "ТМ 2.5", "under25"),
-        ("btts_yes", "ОЗ — Так", "btts_yes"),
-        ("btts_no", "ОЗ — Ні", "btts_no"),
+        ("over_25", "РўР‘ 2.5", "over25"),
+        ("under_25", "РўРњ 2.5", "under25"),
+        ("btts_yes", "РћР— вЂ” РўР°Рє", "btts_yes"),
+        ("btts_no", "РћР— вЂ” РќС–", "btts_no"),
     ]
 
     candidates = []
@@ -5863,7 +5863,7 @@ async def analyze_match(
     print("=" * 70)
 
     print(
-        f"АНАЛІЗ: "
+        f"РђРќРђР›Р†Р—: "
         f"{home_team['name']} - "
         f"{away_team['name']}"
     )
@@ -5911,7 +5911,7 @@ async def analyze_match(
 
     if True:
         print()
-        print("📈 REAL xG: FotMob")
+        print("рџ“€ REAL xG: FotMob")
         try:
             real_xg["home"], real_xg["away"] = await asyncio.gather(
                 get_real_xg_for_team(home_team, before_date, XG_MATCHES),
@@ -5933,9 +5933,9 @@ async def analyze_match(
                 f"sample={real_xg['away'].get('sample') if real_xg['away'] else 0}"
             )
         except Exception as e:
-            print(f"   ⚠️ REAL xG error: {e}")
+            print(f"   вљ пёЏ REAL xG error: {e}")
     else:
-        print("⚠️ REAL xG unavailable")
+        print("вљ пёЏ REAL xG unavailable")
 
     # ========================================================
     # MODEL
@@ -5954,7 +5954,7 @@ async def analyze_match(
     except Exception as e:
 
         print(
-            f"❌ Помилка build_model: "
+            f"вќЊ РџРѕРјРёР»РєР° build_model: "
             f"{repr(e)}"
         )
 
@@ -5997,15 +5997,15 @@ async def analyze_match(
         if not odds_key:
 
             print(
-                "⚠️ У команди немає odds_key"
+                "вљ пёЏ РЈ РєРѕРјР°РЅРґРё РЅРµРјР°С” odds_key"
             )
 
         else:
 
-            # Спочатку шукаємо сам матч серед усіх актуальних футбольних
-            # competition feeds. Це критично для міжлігових турнірів:
-            # Borussia Dortmund - Villarreal не є Bundesliga, навіть якщо
-            # Dortmund є домашньою командою.
+            # РЎРїРѕС‡Р°С‚РєСѓ С€СѓРєР°С”РјРѕ СЃР°Рј РјР°С‚С‡ СЃРµСЂРµРґ СѓСЃС–С… Р°РєС‚СѓР°Р»СЊРЅРёС… С„СѓС‚Р±РѕР»СЊРЅРёС…
+            # competition feeds. Р¦Рµ РєСЂРёС‚РёС‡РЅРѕ РґР»СЏ РјС–Р¶Р»С–РіРѕРІРёС… С‚СѓСЂРЅС–СЂС–РІ:
+            # Borussia Dortmund - Villarreal РЅРµ С” Bundesliga, РЅР°РІС–С‚СЊ СЏРєС‰Рѕ
+            # Dortmund С” РґРѕРјР°С€РЅСЊРѕСЋ РєРѕРјР°РЅРґРѕСЋ.
             found_sport_key, cross_event = await find_odds_event_across_sports(
                 home_team,
                 away_team,
@@ -6023,21 +6023,21 @@ async def analyze_match(
                 if isinstance(event_with_odds, dict) and event_with_odds.get("bookmakers"):
                     odds_event = event_with_odds
                     print(
-                        f"✅ Реальні коефіцієнти знайдено через competition feed: {odds_key}"
+                        f"вњ… Р РµР°Р»СЊРЅС– РєРѕРµС„С–С†С–С”РЅС‚Рё Р·РЅР°Р№РґРµРЅРѕ С‡РµСЂРµР· competition feed: {odds_key}"
                     )
                 else:
                     print(
-                        "⚠️ Матч знайдено, але /events/{id}/odds не повернув букмекера. "
-                        "Переходимо до стандартного /odds fallback."
+                        "вљ пёЏ РњР°С‚С‡ Р·РЅР°Р№РґРµРЅРѕ, Р°Р»Рµ /events/{id}/odds РЅРµ РїРѕРІРµСЂРЅСѓРІ Р±СѓРєРјРµРєРµСЂР°. "
+                        "РџРµСЂРµС…РѕРґРёРјРѕ РґРѕ СЃС‚Р°РЅРґР°СЂС‚РЅРѕРіРѕ /odds fallback."
                     )
 
-            # Fallback: стандартний /odds для початкової ліги команди.
-            # Це також корисно, коли cross-competition /events тимчасово не
-            # містить матч, але /odds вже його показує.
+            # Fallback: СЃС‚Р°РЅРґР°СЂС‚РЅРёР№ /odds РґР»СЏ РїРѕС‡Р°С‚РєРѕРІРѕС— Р»С–РіРё РєРѕРјР°РЅРґРё.
+            # Р¦Рµ С‚Р°РєРѕР¶ РєРѕСЂРёСЃРЅРѕ, РєРѕР»Рё cross-competition /events С‚РёРјС‡Р°СЃРѕРІРѕ РЅРµ
+            # РјС–СЃС‚РёС‚СЊ РјР°С‚С‡, Р°Р»Рµ /odds РІР¶Рµ Р№РѕРіРѕ РїРѕРєР°Р·СѓС”.
             if odds_event is None:
-                # ВАЖЛИВО: /sports/{sport}/odds НЕ підтримує double_chance.
-                # Спочатку отримуємо тільки стандартні ринки, щоб знайти точний event ID.
-                # 1X/X2 запитуємо ОКРЕМО через /events/{eventId}/odds.
+                # Р’РђР–Р›РР’Рћ: /sports/{sport}/odds РќР• РїС–РґС‚СЂРёРјСѓС” double_chance.
+                # РЎРїРѕС‡Р°С‚РєСѓ РѕС‚СЂРёРјСѓС”РјРѕ С‚С–Р»СЊРєРё СЃС‚Р°РЅРґР°СЂС‚РЅС– СЂРёРЅРєРё, С‰РѕР± Р·РЅР°Р№С‚Рё С‚РѕС‡РЅРёР№ event ID.
+                # 1X/X2 Р·Р°РїРёС‚СѓС”РјРѕ РћРљР Р•РњРћ С‡РµСЂРµР· /events/{eventId}/odds.
                 odds_events = await odds_api_get(
                     odds_key,
                     "h2h,totals"
@@ -6051,7 +6051,7 @@ async def analyze_match(
                     odds_events = []
 
                 print(
-                    f"Odds API подій: "
+                    f"Odds API РїРѕРґС–Р№: "
                     f"{len(odds_events)}"
                 )
 
@@ -6068,15 +6068,15 @@ async def analyze_match(
                 except Exception as e:
 
                     print(
-                        "⚠️ Помилка пошуку "
-                        f"матчу в Odds API: {e}"
+                        "вљ пёЏ РџРѕРјРёР»РєР° РїРѕС€СѓРєСѓ "
+                        f"РјР°С‚С‡Сѓ РІ Odds API: {e}"
                     )
 
-            # Якщо /odds повернув події, але конкретний матч не знайшовся,
-            # окремо беремо список events. Потім запитуємо odds за event_id.
+            # РЇРєС‰Рѕ /odds РїРѕРІРµСЂРЅСѓРІ РїРѕРґС–С—, Р°Р»Рµ РєРѕРЅРєСЂРµС‚РЅРёР№ РјР°С‚С‡ РЅРµ Р·РЅР°Р№С€РѕРІСЃСЏ,
+            # РѕРєСЂРµРјРѕ Р±РµСЂРµРјРѕ СЃРїРёСЃРѕРє events. РџРѕС‚С–Рј Р·Р°РїРёС‚СѓС”РјРѕ odds Р·Р° event_id.
             if odds_event is None:
                 try:
-                    print("🔁 /odds не знайшов точний матч. Перевіряю /events...")
+                    print("рџ”Ѓ /odds РЅРµ Р·РЅР°Р№С€РѕРІ С‚РѕС‡РЅРёР№ РјР°С‚С‡. РџРµСЂРµРІС–СЂСЏСЋ /events...")
                     event_list = await odds_api_events_get(odds_key)
                     event_candidate = find_odds_event(
                         event_list,
@@ -6092,21 +6092,21 @@ async def analyze_match(
                         )
                         if isinstance(event_with_odds, dict) and event_with_odds.get("bookmakers"):
                             odds_event = event_with_odds
-                            print("✅ Отримано реальні коефіцієнти через /events/{id}/odds")
+                            print("вњ… РћС‚СЂРёРјР°РЅРѕ СЂРµР°Р»СЊРЅС– РєРѕРµС„С–С†С–С”РЅС‚Рё С‡РµСЂРµР· /events/{id}/odds")
                         else:
-                            print("⚠️ Подію знайдено, але букмекери не повернули коефіцієнти")
+                            print("вљ пёЏ РџРѕРґС–СЋ Р·РЅР°Р№РґРµРЅРѕ, Р°Р»Рµ Р±СѓРєРјРµРєРµСЂРё РЅРµ РїРѕРІРµСЂРЅСѓР»Рё РєРѕРµС„С–С†С–С”РЅС‚Рё")
                 except Exception as e:
-                    print(f"⚠️ Fallback /events помилка: {e}")
+                    print(f"вљ пёЏ Fallback /events РїРѕРјРёР»РєР°: {e}")
 
-            # У The Odds API кваліфікація Ліги чемпіонів має окремий sport key.
-            # Якщо основний CL feed не знайшов матч, перевіряємо qualification feed.
+            # РЈ The Odds API РєРІР°Р»С–С„С–РєР°С†С–СЏ Р›С–РіРё С‡РµРјРїС–РѕРЅС–РІ РјР°С” РѕРєСЂРµРјРёР№ sport key.
+            # РЇРєС‰Рѕ РѕСЃРЅРѕРІРЅРёР№ CL feed РЅРµ Р·РЅР°Р№С€РѕРІ РјР°С‚С‡, РїРµСЂРµРІС–СЂСЏС”РјРѕ qualification feed.
             if odds_event is None and odds_key == "soccer_uefa_champs_league":
 
                 qualification_key = "soccer_uefa_champs_league_qualification"
 
                 print(
-                    "🔁 Основний CL feed не знайшов матч. "
-                    "Перевіряю CL qualification..."
+                    "рџ”Ѓ РћСЃРЅРѕРІРЅРёР№ CL feed РЅРµ Р·РЅР°Р№С€РѕРІ РјР°С‚С‡. "
+                    "РџРµСЂРµРІС–СЂСЏСЋ CL qualification..."
                 )
 
                 qualification_events = await odds_api_get(
@@ -6118,7 +6118,7 @@ async def analyze_match(
                     qualification_events = []
 
                 print(
-                    f"Odds API подій ({qualification_key}): "
+                    f"Odds API РїРѕРґС–Р№ ({qualification_key}): "
                     f"{len(qualification_events)}"
                 )
 
@@ -6133,18 +6133,18 @@ async def analyze_match(
 
                         if odds_event is not None:
                             odds_key = qualification_key
-                            print("✅ Знайдено матч у CL qualification feed")
+                            print("вњ… Р—РЅР°Р№РґРµРЅРѕ РјР°С‚С‡ Сѓ CL qualification feed")
 
                     except Exception as e:
                         print(
-                            "⚠️ Помилка пошуку матчу в CL qualification: "
+                            "вљ пёЏ РџРѕРјРёР»РєР° РїРѕС€СѓРєСѓ РјР°С‚С‡Сѓ РІ CL qualification: "
                             f"{e}"
                         )
 
             if odds_event is not None:
 
                 print(
-                    "✅ Знайдено матч у Odds API"
+                    "вњ… Р—РЅР°Р№РґРµРЅРѕ РјР°С‚С‡ Сѓ Odds API"
                 )
 
                 print(
@@ -6154,12 +6154,12 @@ async def analyze_match(
                 )
 
                 # ====================================================
-                # ДОДАТКОВІ РИНКИ ДЛЯ ТОЧНОЇ ПОДІЇ
+                # Р”РћР”РђРўРљРћР’Р† Р РРќРљР Р”Р›РЇ РўРћР§РќРћР‡ РџРћР”Р†Р‡
                 # ====================================================
-                # The Odds API віддає додаткові soccer markets через
-                # /events/{eventId}/odds. 1X/X2 НЕ можна брати з h2h.
-                # Тому double_chance запитуємо ОКРЕМО і додаємо тільки
-                # його оригінальний market object.
+                # The Odds API РІС–РґРґР°С” РґРѕРґР°С‚РєРѕРІС– soccer markets С‡РµСЂРµР·
+                # /events/{eventId}/odds. 1X/X2 РќР• РјРѕР¶РЅР° Р±СЂР°С‚Рё Р· h2h.
+                # РўРѕРјСѓ double_chance Р·Р°РїРёС‚СѓС”РјРѕ РћРљР Р•РњРћ С– РґРѕРґР°С”РјРѕ С‚С–Р»СЊРєРё
+                # Р№РѕРіРѕ РѕСЂРёРіС–РЅР°Р»СЊРЅРёР№ market object.
 
                 async def merge_extra_market(market_key):
                     extra = await odds_api_event_get(
@@ -6207,7 +6207,7 @@ async def analyze_match(
                             if market.get("key") != market_key:
                                 continue
 
-                            # Видаляємо стару версію тільки цього market.
+                            # Р’РёРґР°Р»СЏС”РјРѕ СЃС‚Р°СЂСѓ РІРµСЂСЃС–СЋ С‚С–Р»СЊРєРё С†СЊРѕРіРѕ market.
                             target_markets[:] = [
                                 m for m in target_markets
                                 if not (isinstance(m, dict) and m.get("key") == market_key)
@@ -6220,15 +6220,15 @@ async def analyze_match(
 
                 try:
                     btts_added = await merge_extra_market("btts")
-                    print(f"✅ BTTS market: отримано {btts_added} outcomes")
+                    print(f"вњ… BTTS market: РѕС‚СЂРёРјР°РЅРѕ {btts_added} outcomes")
                 except Exception as e:
-                    print(f"⚠️ BTTS не отримано: {e}")
+                    print(f"вљ пёЏ BTTS РЅРµ РѕС‚СЂРёРјР°РЅРѕ: {e}")
 
                 try:
                     dc_added = await merge_extra_market("double_chance")
-                    print(f"✅ DOUBLE CHANCE market: отримано {dc_added} outcomes")
+                    print(f"вњ… DOUBLE CHANCE market: РѕС‚СЂРёРјР°РЅРѕ {dc_added} outcomes")
                 except Exception as e:
-                    print(f"⚠️ DOUBLE CHANCE не отримано: {e}")
+                    print(f"вљ пёЏ DOUBLE CHANCE РЅРµ РѕС‚СЂРёРјР°РЅРѕ: {e}")
 
                 # CORNERS: additional event markets are requested separately.
                 # The standard h2h,totals feed does not contain corner markets.
@@ -6239,9 +6239,9 @@ async def analyze_match(
                     try:
                         added = await merge_extra_market(corner_market)
                         if added:
-                            print(f"✅ CORNERS market {corner_market}: {added} outcomes")
+                            print(f"вњ… CORNERS market {corner_market}: {added} outcomes")
                     except Exception as e:
-                        print(f"⚠️ CORNERS market {corner_market} не отримано: {e}")
+                        print(f"вљ пёЏ CORNERS market {corner_market} РЅРµ РѕС‚СЂРёРјР°РЅРѕ: {e}")
 
                 try:
 
@@ -6269,21 +6269,21 @@ async def analyze_match(
                 except Exception as e:
 
                     print(
-                        "⚠️ Помилка отримання "
-                        f"коефіцієнтів: {e}"
+                        "вљ пёЏ РџРѕРјРёР»РєР° РѕС‚СЂРёРјР°РЅРЅСЏ "
+                        f"РєРѕРµС„С–С†С–С”РЅС‚С–РІ: {e}"
                     )
 
             else:
 
                 print(
-                    "⚠️ Майбутній матч "
-                    "у Odds API не знайдено"
+                    "вљ пёЏ РњР°Р№Р±СѓС‚РЅС–Р№ РјР°С‚С‡ "
+                    "Сѓ Odds API РЅРµ Р·РЅР°Р№РґРµРЅРѕ"
                 )
 
     except Exception as e:
 
         print(
-            f"❌ Odds API error: {e}"
+            f"вќЊ Odds API error: {e}"
         )
 
     # ========================================================
@@ -6291,15 +6291,15 @@ async def analyze_match(
     # ========================================================
 
     print()
-    print("💰 REAL ODDS SUMMARY")
+    print("рџ’° REAL ODDS SUMMARY")
 
     print(
-        f"Букмекерів: "
+        f"Р‘СѓРєРјРµРєРµСЂС–РІ: "
         f"{len(real_odds.get('bookmakers', []))}"
     )
 
     print(
-        f"П1: "
+        f"Рџ1: "
         f"{best_odds(real_odds.get('home', []))}"
     )
 
@@ -6309,7 +6309,7 @@ async def analyze_match(
     )
 
     print(
-        f"П2: "
+        f"Рџ2: "
         f"{best_odds(real_odds.get('away', []))}"
     )
 
@@ -6324,22 +6324,22 @@ async def analyze_match(
     )
 
     print(
-        f"ТБ 2.5: "
+        f"РўР‘ 2.5: "
         f"{best_odds(real_odds.get('over25', []))}"
     )
 
     print(
-        f"ТМ 2.5: "
+        f"РўРњ 2.5: "
         f"{best_odds(real_odds.get('under25', []))}"
     )
 
     print(
-        f"ОЗ Так: "
+        f"РћР— РўР°Рє: "
         f"{best_odds(real_odds.get('btts_yes', []))}"
     )
 
     print(
-        f"ОЗ Ні: "
+        f"РћР— РќС–: "
         f"{best_odds(real_odds.get('btts_no', []))}"
     )
 
@@ -6356,7 +6356,7 @@ async def analyze_match(
 
     if market_1x2:
         print()
-        print("📐 MARKET CONSENSUS vs MODEL")
+        print("рџ“ђ MARKET CONSENSUS vs MODEL")
         print(
             f"   Market (de-vig): P1={pct(market_1x2['home'])} | "
             f"X={pct(market_1x2['draw'])} | "
@@ -6393,7 +6393,7 @@ async def analyze_match(
     except Exception as e:
 
         print(
-            f"⚠️ Помилка розрахунку Value: "
+            f"вљ пёЏ РџРѕРјРёР»РєР° СЂРѕР·СЂР°С…СѓРЅРєСѓ Value: "
             f"{e}"
         )
 
@@ -6409,7 +6409,7 @@ async def analyze_match(
     # can be audited before we change the scoring formula.
     if candidates:
         print()
-        print("📋 BET CANDIDATES")
+        print("рџ“‹ BET CANDIDATES")
         for item in candidates:
             print(
                 f"   {item.get('name')}: prob={pct(item.get('probability', 0))} | "
@@ -6427,12 +6427,12 @@ async def analyze_match(
     # --------------------------------------------------------
     # RECOMMENDATIONS
     # --------------------------------------------------------
-    # 1) Найвірогідніша ставка = найбільша ймовірність проходу.
-    #    Вона НЕ повинна автоматично бути Value.
-    # 2) VALUE #1 / VALUE #2 = дві найкращі ставки з позитивним
-    #    market-wide Value. Для VALUE використовуємо median odds,
-    #    щоб одна аномально висока контора не перекручувала рейтинг.
-    # 3) Для двох Value не дозволяємо дублікати одного ринку.
+    # 1) РќР°Р№РІС–СЂРѕРіС–РґРЅС–С€Р° СЃС‚Р°РІРєР° = РЅР°Р№Р±С–Р»СЊС€Р° Р№РјРѕРІС–СЂРЅС–СЃС‚СЊ РїСЂРѕС…РѕРґСѓ.
+    #    Р’РѕРЅР° РќР• РїРѕРІРёРЅРЅР° Р°РІС‚РѕРјР°С‚РёС‡РЅРѕ Р±СѓС‚Рё Value.
+    # 2) VALUE #1 / VALUE #2 = РґРІС– РЅР°Р№РєСЂР°С‰С– СЃС‚Р°РІРєРё Р· РїРѕР·РёС‚РёРІРЅРёРј
+    #    market-wide Value. Р”Р»СЏ VALUE РІРёРєРѕСЂРёСЃС‚РѕРІСѓС”РјРѕ median odds,
+    #    С‰РѕР± РѕРґРЅР° Р°РЅРѕРјР°Р»СЊРЅРѕ РІРёСЃРѕРєР° РєРѕРЅС‚РѕСЂР° РЅРµ РїРµСЂРµРєСЂСѓС‡СѓРІР°Р»Р° СЂРµР№С‚РёРЅРі.
+    # 3) Р”Р»СЏ РґРІРѕС… Value РЅРµ РґРѕР·РІРѕР»СЏС”РјРѕ РґСѓР±Р»С–РєР°С‚Рё РѕРґРЅРѕРіРѕ СЂРёРЅРєСѓ.
 
     probability_candidates = [
         item for item in candidates
@@ -6468,7 +6468,7 @@ async def analyze_match(
 
     # `best` is now exactly the strongest ranked recommendation shown first in
     # the betting-markets table. This keeps backend, AI recommendation,
-    # "СТАВКА ДНЯ" and mobile TOP VALUE in sync.
+    # "РЎРўРђР’РљРђ Р”РќРЇ" and mobile TOP VALUE in sync.
     best = value_bets[0] if value_bets else most_likely
 
     model["best"] = best
@@ -6550,20 +6550,20 @@ def format_analysis(result):
     # ========================================================
 
     text.append(
-        "⚽ <b>FOOTBALL AI ANALYST V53</b>"
+        "вљЅ <b>FOOTBALL AI ANALYST V53</b>"
     )
 
     text.append("")
 
     text.append(
-        f"<b>{home['name']}</b> — "
+        f"<b>{home['name']}</b> вЂ” "
         f"<b>{away['name']}</b>"
     )
 
     text.append("")
 
     text.append(
-        f"🏟 "
+        f"рџЏџ "
         f"{home.get('league_name', '')}"
     )
 
@@ -6593,7 +6593,7 @@ def format_analysis(result):
                 text.append("")
 
                 text.append(
-                    "🕐 <b>Матч:</b> "
+                    "рџ•ђ <b>РњР°С‚С‡:</b> "
                     +
                     local_dt.strftime(
                         "%d.%m.%Y %H:%M"
@@ -6611,7 +6611,7 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "📊 <b>МОДЕЛЬ V32</b>"
+        "рџ“Љ <b>РњРћР”Р•Р›Р¬ V32</b>"
     )
 
     try:
@@ -6641,8 +6641,8 @@ def format_analysis(result):
         away_xg = 0
 
     text.append(
-        f"Очікувані голи моделі: "
-        f"<b>{home_xg:.2f}</b> — "
+        f"РћС‡С–РєСѓРІР°РЅС– РіРѕР»Рё РјРѕРґРµР»С–: "
+        f"<b>{home_xg:.2f}</b> вЂ” "
         f"<b>{away_xg:.2f}</b>"
     )
 
@@ -6655,20 +6655,20 @@ def format_analysis(result):
         and isinstance(rx_away, dict) and rx_away.get("available")
     ):
         text.append("")
-        text.append("📈 <b>РЕАЛЬНИЙ xG ОСТАННІХ МАТЧІВ</b>")
+        text.append("рџ“€ <b>Р Р•РђР›Р¬РќРР™ xG РћРЎРўРђРќРќР†РҐ РњРђРўР§Р†Р’</b>")
         def _fmt_xg(value):
             value = safe_float(value, None)
-            return f"{value:.2f}" if value is not None else "—"
+            return f"{value:.2f}" if value is not None else "вЂ”"
 
         text.append(
             f"{home['name']}: xG <b>{_fmt_xg(rx_home.get('xg'))}</b> | "
             f"xGA <b>{_fmt_xg(rx_home.get('xga'))}</b> | "
-            f"{rx_home.get('sample', 0)} матчів"
+            f"{rx_home.get('sample', 0)} РјР°С‚С‡С–РІ"
         )
         text.append(
             f"{away['name']}: xG <b>{_fmt_xg(rx_away.get('xg'))}</b> | "
             f"xGA <b>{_fmt_xg(rx_away.get('xga'))}</b> | "
-            f"{rx_away.get('sample', 0)} матчів"
+            f"{rx_away.get('sample', 0)} РјР°С‚С‡С–РІ"
         )
 
     # ========================================================
@@ -6678,11 +6678,11 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "🎯 <b>ЙМОВІРНОСТІ</b>"
+        "рџЋЇ <b>Р™РњРћР’Р†Р РќРћРЎРўР†</b>"
     )
 
     text.append(
-        f"П1: "
+        f"Рџ1: "
         f"{pct(probabilities.get('home_win', 0))}"
     )
 
@@ -6692,7 +6692,7 @@ def format_analysis(result):
     )
 
     text.append(
-        f"П2: "
+        f"Рџ2: "
         f"{pct(probabilities.get('away_win', 0))}"
     )
 
@@ -6713,16 +6713,16 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "⚽ <b>ТОТАЛ 2.5</b>"
+        "вљЅ <b>РўРћРўРђР› 2.5</b>"
     )
 
     text.append(
-        f"ТБ 2.5: "
+        f"РўР‘ 2.5: "
         f"{pct(probabilities.get('over_25', 0))}"
     )
 
     text.append(
-        f"ТМ 2.5: "
+        f"РўРњ 2.5: "
         f"{pct(probabilities.get('under_25', 0))}"
     )
 
@@ -6733,16 +6733,16 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "🥅 <b>ОБОЄ ЗАБ'ЮТЬ</b>"
+        "рџҐ… <b>РћР‘РћР„ Р—РђР‘'Р®РўР¬</b>"
     )
 
     text.append(
-        f"ОЗ — Так: "
+        f"РћР— вЂ” РўР°Рє: "
         f"{pct(probabilities.get('btts_yes', 0))}"
     )
 
     text.append(
-        f"ОЗ — Ні: "
+        f"РћР— вЂ” РќС–: "
         f"{pct(probabilities.get('btts_no', 0))}"
     )
 
@@ -6766,11 +6766,11 @@ def format_analysis(result):
             text.append("")
 
             text.append(
-                "🎯 <b>НАЙІМОВІРНІШИЙ РАХУНОК</b>"
+                "рџЋЇ <b>РќРђР™Р†РњРћР’Р†Р РќР†РЁРР™ Р РђРҐРЈРќРћРљ</b>"
             )
 
             text.append(
-                f"<b>{hg}:{ag}</b> — "
+                f"<b>{hg}:{ag}</b> вЂ” "
                 f"{pct(score_probability)}"
             )
 
@@ -6807,7 +6807,7 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "🏠 <b>ФОРМА ВДОМА / В ГОСТЯХ</b>"
+        "рџЏ  <b>Р¤РћР РњРђ Р’Р”РћРњРђ / Р’ Р“РћРЎРўРЇРҐ</b>"
     )
 
     if home_home_form.get(
@@ -6822,7 +6822,7 @@ def format_analysis(result):
             f"{home_home_form.get('losses', 0)}L "
             f"("
             f"{home_home_form.get('points_per_game', 0):.2f}"
-            f" оч./матч)"
+            f" РѕС‡./РјР°С‚С‡)"
         )
 
     if away_away_form.get(
@@ -6837,7 +6837,7 @@ def format_analysis(result):
             f"{away_away_form.get('losses', 0)}L "
             f"("
             f"{away_away_form.get('points_per_game', 0):.2f}"
-            f" оч./матч)"
+            f" РѕС‡./РјР°С‚С‡)"
         )
 
     # ========================================================
@@ -6847,19 +6847,19 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "⚔️ <b>АТАКА / ЗАХИСТ</b>"
+        "вљ”пёЏ <b>РђРўРђРљРђ / Р—РђРҐРРЎРў</b>"
     )
 
     text.append(
         f"{home['name']}: "
-        f"{home_home_form.get('attack', 0):.2f} гол/матч | "
-        f"{home_home_form.get('defence', 0):.2f} пропущено"
+        f"{home_home_form.get('attack', 0):.2f} РіРѕР»/РјР°С‚С‡ | "
+        f"{home_home_form.get('defence', 0):.2f} РїСЂРѕРїСѓС‰РµРЅРѕ"
     )
 
     text.append(
         f"{away['name']}: "
-        f"{away_away_form.get('attack', 0):.2f} гол/матч | "
-        f"{away_away_form.get('defence', 0):.2f} пропущено"
+        f"{away_away_form.get('attack', 0):.2f} РіРѕР»/РјР°С‚С‡ | "
+        f"{away_away_form.get('defence', 0):.2f} РїСЂРѕРїСѓС‰РµРЅРѕ"
     )
 
     # ========================================================
@@ -6891,7 +6891,7 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "⏱ <b>ГОЛИ ПО ТАЙМАХ</b>"
+        "вЏ± <b>Р“РћР›Р РџРћ РўРђР™РњРђРҐ</b>"
     )
 
     if home_halves.get(
@@ -6901,9 +6901,9 @@ def format_analysis(result):
 
         text.append(
             f"{home['name']}: "
-            f"1-й тайм "
+            f"1-Р№ С‚Р°Р№Рј "
             f"{home_halves.get('first_half_goals', 0):.2f} "
-            f"| 2-й "
+            f"| 2-Р№ "
             f"{home_halves.get('second_half_goals', 0):.2f}"
         )
 
@@ -6914,9 +6914,9 @@ def format_analysis(result):
 
         text.append(
             f"{away['name']}: "
-            f"1-й тайм "
+            f"1-Р№ С‚Р°Р№Рј "
             f"{away_halves.get('first_half_goals', 0):.2f} "
-            f"| 2-й "
+            f"| 2-Р№ "
             f"{away_halves.get('second_half_goals', 0):.2f}"
         )
 
@@ -6938,7 +6938,7 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "🤝 <b>ОСОБИСТІ ЗУСТРІЧІ</b>"
+        "рџ¤ќ <b>РћРЎРћР‘РРЎРўР† Р—РЈРЎРўР Р†Р§Р†</b>"
     )
 
     if h2h.get(
@@ -6947,30 +6947,30 @@ def format_analysis(result):
     ):
 
         text.append(
-            f"Матчів: "
+            f"РњР°С‚С‡С–РІ: "
             f"{h2h.get('matches', 0)}"
         )
 
         text.append(
-            f"Середні голи: "
-            f"{h2h.get('home_goals', 0):.2f} — "
+            f"РЎРµСЂРµРґРЅС– РіРѕР»Рё: "
+            f"{h2h.get('home_goals', 0):.2f} вЂ” "
             f"{h2h.get('away_goals', 0):.2f}"
         )
 
         text.append(
-            f"ТБ 2.5: "
+            f"РўР‘ 2.5: "
             f"{pct(h2h.get('over25', 0))}"
         )
 
         text.append(
-            f"ОЗ: "
+            f"РћР—: "
             f"{pct(h2h.get('btts', 0))}"
         )
 
     else:
 
         text.append(
-            "Недостатньо даних H2H."
+            "РќРµРґРѕСЃС‚Р°С‚РЅСЊРѕ РґР°РЅРёС… H2H."
         )
 
     # ========================================================
@@ -6980,7 +6980,7 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "💰 <b>РЕАЛЬНІ КОЕФІЦІЄНТИ</b>"
+        "рџ’° <b>Р Р•РђР›Р¬РќР† РљРћР•Р¤Р†Р¦Р†Р„РќРўР</b>"
     )
 
     if odds_event:
@@ -7035,69 +7035,69 @@ def format_analysis(result):
         )
 
         text.append(
-            f"П1: "
+            f"Рџ1: "
             f"<b>{home_odds:.2f}</b>"
             if home_odds is not None
-            else "П1: —"
+            else "Рџ1: вЂ”"
         )
 
         text.append(
             f"X: "
             f"<b>{draw_odds:.2f}</b>"
             if draw_odds is not None
-            else "X: —"
+            else "X: вЂ”"
         )
 
         text.append(
-            f"П2: "
+            f"Рџ2: "
             f"<b>{away_odds:.2f}</b>"
             if away_odds is not None
-            else "П2: —"
+            else "Рџ2: вЂ”"
         )
 
         text.append(
-            f"ТБ 2.5: "
+            f"РўР‘ 2.5: "
             f"<b>{over_odds:.2f}</b>"
             if over_odds is not None
-            else "ТБ 2.5: —"
+            else "РўР‘ 2.5: вЂ”"
         )
 
         text.append(
-            f"ТМ 2.5: "
+            f"РўРњ 2.5: "
             f"<b>{under_odds:.2f}</b>"
             if under_odds is not None
-            else "ТМ 2.5: —"
+            else "РўРњ 2.5: вЂ”"
         )
 
         text.append(
-            f"ОЗ — Так: "
+            f"РћР— вЂ” РўР°Рє: "
             f"<b>{btts_yes_odds:.2f}</b>"
             if btts_yes_odds is not None
-            else "ОЗ — Так: —"
+            else "РћР— вЂ” РўР°Рє: вЂ”"
         )
 
         text.append(
-            f"ОЗ — Ні: "
+            f"РћР— вЂ” РќС–: "
             f"<b>{btts_no_odds:.2f}</b>"
             if btts_no_odds is not None
-            else "ОЗ — Ні: —"
+            else "РћР— вЂ” РќС–: вЂ”"
         )
 
         text.append("")
 
         text.append(
-            f"🏦 Букмекерів: "
+            f"рџЏ¦ Р‘СѓРєРјРµРєРµСЂС–РІ: "
             f"{result.get('bookmakers_count', 0)}"
         )
 
     else:
 
         text.append(
-            "⚠️ Коефіцієнти не знайдені."
+            "вљ пёЏ РљРѕРµС„С–С†С–С”РЅС‚Рё РЅРµ Р·РЅР°Р№РґРµРЅС–."
         )
 
         text.append(
-            "Для вибору найкращої ставки потрібні реальні коефіцієнти."
+            "Р”Р»СЏ РІРёР±РѕСЂСѓ РЅР°Р№РєСЂР°С‰РѕС— СЃС‚Р°РІРєРё РїРѕС‚СЂС–Р±РЅС– СЂРµР°Р»СЊРЅС– РєРѕРµС„С–С†С–С”РЅС‚Рё."
         )
 
     # ========================================================
@@ -7108,26 +7108,26 @@ def format_analysis(result):
     value_bets = model.get("value_bets", [])
 
     text.append("")
-    text.append("🎯 <b>РЕКОМЕНДАЦІЇ БОТА</b>")
+    text.append("рџЋЇ <b>Р Р•РљРћРњР•РќР”РђР¦Р†Р‡ Р‘РћРўРђ</b>")
 
-    def append_bet_block(title, item, icon="💎", show_value=True):
+    def append_bet_block(title, item, icon="рџ’Ћ", show_value=True):
         if not item:
             text.append("")
             text.append(f"{icon} <b>{title}</b>")
-            text.append("— немає доступної ставки")
+            text.append("вЂ” РЅРµРјР°С” РґРѕСЃС‚СѓРїРЅРѕС— СЃС‚Р°РІРєРё")
             return
 
         text.append("")
         text.append(f"{icon} <b>{title}</b>")
-        text.append(f"🏆 <b>{item.get('name', '—')}</b>")
+        text.append(f"рџЏ† <b>{item.get('name', 'вЂ”')}</b>")
         text.append(
-            f"📈 Ймовірність: <b>{pct(item.get('probability', 0))}</b>"
+            f"рџ“€ Р™РјРѕРІС–СЂРЅС–СЃС‚СЊ: <b>{pct(item.get('probability', 0))}</b>"
         )
 
         odds = item.get("odds")
         if odds is not None:
             try:
-                text.append(f"💰 Коефіцієнт: <b>{float(odds):.2f}</b>")
+                text.append(f"рџ’° РљРѕРµС„С–С†С–С”РЅС‚: <b>{float(odds):.2f}</b>")
             except (TypeError, ValueError):
                 pass
 
@@ -7136,7 +7136,7 @@ def format_analysis(result):
             if market_value is not None:
                 try:
                     text.append(
-                        f"💎 Market Value: <b>{float(market_value) * 100:+.1f}%</b>"
+                        f"рџ’Ћ Market Value: <b>{float(market_value) * 100:+.1f}%</b>"
                     )
                 except (TypeError, ValueError):
                     pass
@@ -7144,37 +7144,37 @@ def format_analysis(result):
         confidence = item.get("confidence")
         if confidence is not None:
             try:
-                text.append(f"🧠 Confidence: <b>{float(confidence):.1f}/100</b>")
+                text.append(f"рџ§  Confidence: <b>{float(confidence):.1f}/100</b>")
             except (TypeError, ValueError):
                 pass
 
         category = item.get("category")
         if category and category != "NO BET":
-            category_icon = "🔥" if category == "STRONG BET" else "💎"
+            category_icon = "рџ”Ґ" if category == "STRONG BET" else "рџ’Ћ"
             text.append(f"{category_icon} {category}")
 
     append_bet_block(
-        "НАЙВІРОГІДНІША СТАВКА",
+        "РќРђР™Р’Р†Р РћР“Р†Р”РќР†РЁРђ РЎРўРђР’РљРђ",
         most_likely,
-        icon="🛡",
+        icon="рџ›Ў",
         show_value=False,
     )
 
     if value_bets:
-        append_bet_block("VALUE #1", value_bets[0], icon="💎", show_value=True)
+        append_bet_block("VALUE #1", value_bets[0], icon="рџ’Ћ", show_value=True)
 
         if len(value_bets) >= 2:
-            append_bet_block("VALUE #2", value_bets[1], icon="💎", show_value=True)
+            append_bet_block("VALUE #2", value_bets[1], icon="рџ’Ћ", show_value=True)
         else:
             text.append("")
-            text.append("💎 <b>VALUE #2</b>")
-            text.append("— другої ставки з достатнім Value не знайдено")
+            text.append("рџ’Ћ <b>VALUE #2</b>")
+            text.append("вЂ” РґСЂСѓРіРѕС— СЃС‚Р°РІРєРё Р· РґРѕСЃС‚Р°С‚РЅС–Рј Value РЅРµ Р·РЅР°Р№РґРµРЅРѕ")
     else:
         text.append("")
-        text.append("💎 <b>VALUE #1 / VALUE #2</b>")
-        text.append("— модель не знайшла достатньо позитивного Value")
+        text.append("рџ’Ћ <b>VALUE #1 / VALUE #2</b>")
+        text.append("вЂ” РјРѕРґРµР»СЊ РЅРµ Р·РЅР°Р№С€Р»Р° РґРѕСЃС‚Р°С‚РЅСЊРѕ РїРѕР·РёС‚РёРІРЅРѕРіРѕ Value")
 
-    # Коротке пояснення, якщо найвірогідніша ставка не є Value.
+    # РљРѕСЂРѕС‚РєРµ РїРѕСЏСЃРЅРµРЅРЅСЏ, СЏРєС‰Рѕ РЅР°Р№РІС–СЂРѕРіС–РґРЅС–С€Р° СЃС‚Р°РІРєР° РЅРµ С” Value.
     if most_likely:
         most_likely_market_value = safe_float(
             most_likely.get("market_value"), 0.0
@@ -7182,8 +7182,8 @@ def format_analysis(result):
         if most_likely_market_value < MIN_VALUE:
             text.append("")
             text.append(
-                "ℹ️ Найвірогідніша ставка не обов'язково має Value: "
-                "висока ймовірність ≠ вигідний коефіцієнт."
+                "в„№пёЏ РќР°Р№РІС–СЂРѕРіС–РґРЅС–С€Р° СЃС‚Р°РІРєР° РЅРµ РѕР±РѕРІ'СЏР·РєРѕРІРѕ РјР°С” Value: "
+                "РІРёСЃРѕРєР° Р№РјРѕРІС–СЂРЅС–СЃС‚СЊ в‰  РІРёРіС–РґРЅРёР№ РєРѕРµС„С–С†С–С”РЅС‚."
             )
 
     # ========================================================
@@ -7193,24 +7193,24 @@ def format_analysis(result):
     text.append("")
 
     text.append(
-        "📚 <b>ІСТОРІЯ</b>"
+        "рџ“љ <b>Р†РЎРўРћР Р†РЇ</b>"
     )
 
     text.append(
         f"{home['name']}: "
-        f"{result.get('home_history', 0)} матчів"
+        f"{result.get('home_history', 0)} РјР°С‚С‡С–РІ"
     )
 
     text.append(
         f"{away['name']}: "
-        f"{result.get('away_history', 0)} матчів"
+        f"{result.get('away_history', 0)} РјР°С‚С‡С–РІ"
     )
 
     text.append("")
 
     text.append(
-        "⚠️ Модельний прогноз, "
-        "а не гарантія результату."
+        "вљ пёЏ РњРѕРґРµР»СЊРЅРёР№ РїСЂРѕРіРЅРѕР·, "
+        "Р° РЅРµ РіР°СЂР°РЅС‚С–СЏ СЂРµР·СѓР»СЊС‚Р°С‚Сѓ."
     )
 
     return "\n".join(text)
@@ -7229,11 +7229,11 @@ def parse_match(text):
 
     separators = [
         " - ",
-        " – ",
-        " — ",
+        " вЂ“ ",
+        " вЂ” ",
         "-",
-        "–",
-        "—",
+        "вЂ“",
+        "вЂ”",
     ]
 
     for separator in separators:
@@ -7277,7 +7277,7 @@ async def sofascore_get(path, params=None):
             async with session.get(url, params=params or {}, timeout=aiohttp.ClientTimeout(total=20)) as r:
                 text = await r.text()
                 if r.status != 200:
-                    print(f"⚠️ SofaScore HTTP {r.status}: {url} | {text[:250]}")
+                    print(f"вљ пёЏ SofaScore HTTP {r.status}: {url} | {text[:250]}")
                     return None
                 try:
                     data = json.loads(text)
@@ -7286,10 +7286,10 @@ async def sofascore_get(path, params=None):
                 SOFASCORE_CACHE[key] = data
                 return data
     except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-        print(f"⚠️ SofaScore connection error: {e}")
+        print(f"вљ пёЏ SofaScore connection error: {e}")
         return None
     except Exception as e:
-        print(f"⚠️ SofaScore error: {e}")
+        print(f"вљ пёЏ SofaScore error: {e}")
         return None
 
 
@@ -7312,13 +7312,13 @@ async def sofascore_team_id(name):
     def norm(v):
         v = str(v or "").lower().strip()
         v = re.sub(r"\b(fc|cf|afc|ac|sc|fk|sk|club|calcio)\b", " ", v)
-        v = re.sub(r"[^a-z0-9а-яіїєґ ]+", " ", v)
+        v = re.sub(r"[^a-z0-9Р°-СЏС–С—С”Т‘ ]+", " ", v)
         return re.sub(r"\s+", " ", v).strip()
 
     target = norm(name)
     known = SOFASCORE_KNOWN_TEAM_IDS.get(target)
     if known:
-        print(f"   🔎 SofaScore known ID: {name} → ID {known}")
+        print(f"   рџ”Ћ SofaScore known ID: {name} в†’ ID {known}")
         return known
 
     # Search is only a fallback. SofaScore currently blocks /search/all on some IPs.
@@ -7357,11 +7357,11 @@ async def sofascore_team_id(name):
             candidates.append((score, team_id, title))
 
     if not candidates:
-        print(f"   ⚠️ SofaScore search: '{name}' → результатів немає")
+        print(f"   вљ пёЏ SofaScore search: '{name}' в†’ СЂРµР·СѓР»СЊС‚Р°С‚С–РІ РЅРµРјР°С”")
         return None
     candidates.sort(key=lambda x: x[0], reverse=True)
     score, team_id, title = candidates[0]
-    print(f"   🔎 SofaScore search: {name} → {title} | ID {team_id}")
+    print(f"   рџ”Ћ SofaScore search: {name} в†’ {title} | ID {team_id}")
     return team_id if score >= 0.45 else None
 
 
@@ -7637,13 +7637,13 @@ async def fotmob_recent_corner_history(team_name, limit=10):
     async with aiohttp.ClientSession(timeout=timeout) as session:
         team_id = await fotmob_find_team_id(session, team_name)
         if not team_id:
-            print(f"   ⚠️ FotMob: team not found for corners: {team_name}")
+            print(f"   вљ пёЏ FotMob: team not found for corners: {team_name}")
             return []
 
         try:
             team_data = await fotmob_get_team_data(session, team_id)
         except Exception as e:
-            print(f"   ⚠️ FotMob team data for corners {team_name}: {e}")
+            print(f"   вљ пёЏ FotMob team data for corners {team_name}: {e}")
             return []
 
         raw_matches = []
@@ -7681,12 +7681,12 @@ async def fotmob_recent_corner_history(team_name, limit=10):
                     candidates = list(merged.values())
                     candidates.sort(key=lambda x: x["date"], reverse=True)
                 except Exception as e:
-                    print(f"   ⚠️ FotMob historical corners {team_name}: {e}")
+                    print(f"   вљ пёЏ FotMob historical corners {team_name}: {e}")
 
         # Ask for more matches than needed because some matchDetails may not
         # contain a Corners row.
         candidates = candidates[:max(limit * 2, 20)]
-        print(f"   🔎 FotMob corner candidates for {team_name}: {len(candidates)}")
+        print(f"   рџ”Ћ FotMob corner candidates for {team_name}: {len(candidates)}")
 
         for info in candidates:
             match_id = str(info["id"])
@@ -7714,7 +7714,7 @@ async def fotmob_recent_corner_history(team_name, limit=10):
                     )
                 except Exception as e:
                     print(
-                        f"      ⚠️ FotMob corners {info.get('home')} - "
+                        f"      вљ пёЏ FotMob corners {info.get('home')} - "
                         f"{info.get('away')}: {e}"
                     )
                     continue
@@ -7799,16 +7799,16 @@ def _corner_grade(c):
     p = safe_float(c.get("probability"), 0.0)
     stability = safe_float(c.get("stability"), 0.0)
     if v >= 0.08 and conf >= 65 and p >= 0.55 and stability >= 0.55:
-        return "🔥 СИЛЬНА СТАВКА"
+        return "рџ”Ґ РЎРР›Р¬РќРђ РЎРўРђР’РљРђ"
     if v >= 0.03 and conf >= 55 and stability >= 0.45:
-        return "🟢 VALUE"
+        return "рџџў VALUE"
     if v >= 0.0 and conf >= 50:
-        return "🟡 ПОГРАНИЧНО"
-    return "🔴 NO BET"
+        return "рџџЎ РџРћР“Р РђРќРР§РќРћ"
+    return "рџ”ґ NO BET"
 
 def _format_corner_line(c):
     return (
-        f"   {'⭐ ' if c['value'] >= MIN_VALUE and c['confidence'] >= MIN_CONFIDENCE else '   ' }"
+        f"   {'в­ђ ' if c['value'] >= MIN_VALUE and c['confidence'] >= MIN_CONFIDENCE else '   ' }"
         f"{c['label']}: {c['selection']} {c['line']:.1f} @ {c['odds']:.2f} "
         f"| P {c['probability']*100:.1f}% | Fair {c['fair_odds']:.2f} "
         f"| Value {c['value']*100:+.1f}% | Conf {c['confidence']:.1f}% "
@@ -7817,7 +7817,7 @@ def _format_corner_line(c):
 
 
 async def calculate_corner_analysis(home_team, away_team, odds_event):
-    print("\n🟩 CORNERS V59 PRO → FotMob + real Odds API + stability model")
+    print("\nрџџ© CORNERS V59 PRO в†’ FotMob + real Odds API + stability model")
 
     home_rows, away_rows = await asyncio.gather(
         fotmob_recent_corner_history(home_team["name"], limit=10),
@@ -7843,7 +7843,7 @@ async def calculate_corner_analysis(home_team, away_team, odds_event):
     )
 
     if hs["venue_for"] is None or aws["venue_for"] is None:
-        print("⚠️ FotMob: недостаточно данных по угловым")
+        print("вљ пёЏ FotMob: РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РґР°РЅРЅС‹С… РїРѕ СѓРіР»РѕРІС‹Рј")
         return {
             "home_expected": 0.0,
             "away_expected": 0.0,
@@ -7887,7 +7887,7 @@ async def calculate_corner_analysis(home_team, away_team, odds_event):
         "alternate_totals_corners", "alternate_team_totals_corners"
     }))
     if not outcomes:
-        print("⚠️ Реальные corner odds не найдены")
+        print("вљ пёЏ Р РµР°Р»СЊРЅС‹Рµ corner odds РЅРµ РЅР°Р№РґРµРЅС‹")
         return {
             "home_expected": eh, "away_expected": ea, "total_expected": et,
             "candidates": [], "rows_home": hs, "rows_away": aws,
@@ -7947,7 +7947,7 @@ async def calculate_corner_analysis(home_team, away_team, odds_event):
     for o in outcomes:
         if o["key"] == "alternate_totals_corners":
             c = _corner_candidate(
-                "Загальні кути", et, o,
+                "Р—Р°РіР°Р»СЊРЅС– РєСѓС‚Рё", et, o,
                 variance=total_variance,
                 sample_n=min(hs["all_n"], aws["all_n"]),
                 market_count=total_market_count,
@@ -7957,7 +7957,7 @@ async def calculate_corner_analysis(home_team, away_team, odds_event):
             desc = normalize_name(o.get("description", ""))
             if desc and (SequenceMatcher(None, desc, hn).ratio() >= .45 or hn in desc or desc in hn):
                 c = _corner_candidate(
-                    f"{home_team['name']} кути", eh, o,
+                    f"{home_team['name']} РєСѓС‚Рё", eh, o,
                     variance=home_variance,
                     sample_n=hs["venue_n"],
                     market_count=home_market_count,
@@ -7965,7 +7965,7 @@ async def calculate_corner_analysis(home_team, away_team, odds_event):
                 )
             elif desc and (SequenceMatcher(None, desc, an).ratio() >= .45 or an in desc or desc in an):
                 c = _corner_candidate(
-                    f"{away_team['name']} кути", ea, o,
+                    f"{away_team['name']} РєСѓС‚Рё", ea, o,
                     variance=away_variance,
                     sample_n=aws["venue_n"],
                     market_count=away_market_count,
@@ -7983,7 +7983,7 @@ async def calculate_corner_analysis(home_team, away_team, odds_event):
     # Display every real line returned by the bookmaker feed. This is useful
     # for manual selection and makes it obvious when the model rejects a line.
     all_lines.sort(key=lambda x: (x["label"], x["line"], x["selection"]))
-    print(f"\n   📊 CORNER LINES ({len(all_lines)} real lines, best available price):")
+    print(f"\n   рџ“Љ CORNER LINES ({len(all_lines)} real lines, best available price):")
     for c in all_lines:
         print(_format_corner_line(c))
 
@@ -7991,11 +7991,11 @@ async def calculate_corner_analysis(home_team, away_team, odds_event):
     if candidates:
         b = candidates[0]
         print(
-            f"\n   🏆 BEST CORNER BET: {b['label']} {b['selection']} {b['line']:.1f} "
+            f"\n   рџЏ† BEST CORNER BET: {b['label']} {b['selection']} {b['line']:.1f} "
             f"@ {b['odds']:.2f} | Value {b['value']*100:+.1f}% | Conf {b['confidence']:.1f}%"
         )
     else:
-        print("\n   ⚠️ Немає corner bet з достатнім Value/Confidence")
+        print("\n   вљ пёЏ РќРµРјР°С” corner bet Р· РґРѕСЃС‚Р°С‚РЅС–Рј Value/Confidence")
 
     return {
         "home_expected": eh,
@@ -8010,7 +8010,7 @@ async def calculate_corner_analysis(home_team, away_team, odds_event):
 
 
 # ============================================================
-# YELLOW CARDS V1 — LAST 30 MATCHES + REFEREE
+# YELLOW CARDS V1 вЂ” LAST 30 MATCHES + REFEREE
 # ============================================================
 
 FOTMOB_MATCH_YELLOW_CACHE = {}
@@ -8035,12 +8035,12 @@ def parse_fotmob_yellow_cards(data):
 
     def is_yellow_label(value):
         label = str(value or "").strip().lower()
-        compact = re.sub(r"[^a-zа-я0-9]+", "", label)
+        compact = re.sub(r"[^a-zР°-СЏ0-9]+", "", label)
         return (
             "yellowcard" in compact
             or "yellowcards" in compact
-            or "желтыекарточ" in compact
-            or "жёлтыекарточ" in compact
+            or "Р¶РµР»С‚С‹РµРєР°СЂС‚РѕС‡" in compact
+            or "Р¶С‘Р»С‚С‹РµРєР°СЂС‚РѕС‡" in compact
         )
 
     content = data.get("content")
@@ -8090,13 +8090,13 @@ async def fotmob_recent_yellow_history(team_name, limit=CARDS_MATCH_LIMIT):
     async with aiohttp.ClientSession(timeout=timeout) as session:
         team_id = await fotmob_find_team_id(session, team_name)
         if not team_id:
-            print(f"   ⚠️ FotMob: team not found for cards: {team_name}")
+            print(f"   вљ пёЏ FotMob: team not found for cards: {team_name}")
             return []
 
         try:
             team_data = await fotmob_get_team_data(session, team_id)
         except Exception as exc:
-            print(f"   ⚠️ FotMob team data for cards {team_name}: {exc}")
+            print(f"   вљ пёЏ FotMob team data for cards {team_name}: {exc}")
             return []
 
         raw_matches = []
@@ -8138,10 +8138,10 @@ async def fotmob_recent_yellow_history(team_name, limit=CARDS_MATCH_LIMIT):
                 candidates = list(merged.values())
                 candidates.sort(key=lambda x: x["date"], reverse=True)
             except Exception as exc:
-                print(f"   ⚠️ FotMob historical cards {team_name}: {exc}")
+                print(f"   вљ пёЏ FotMob historical cards {team_name}: {exc}")
 
         candidates = candidates[:max(limit + 12, 42)]
-        print(f"   🟨 FotMob card candidates for {team_name}: {len(candidates)}")
+        print(f"   рџџЁ FotMob card candidates for {team_name}: {len(candidates)}")
         semaphore = asyncio.Semaphore(6)
 
         async def load_one(info):
@@ -8304,7 +8304,7 @@ async def _football_data_referee_assignment(home_name, away_name, kickoff_utc=No
             retries=2,
         )
     except Exception as exc:
-        print(f"   ⚠️ Football-Data referee lookup failed: {exc}")
+        print(f"   вљ пёЏ Football-Data referee lookup failed: {exc}")
         return None
 
     matches = (data or {}).get("matches") or []
@@ -8361,7 +8361,7 @@ async def _football_data_referee_assignment(home_name, away_name, kickoff_utc=No
             best_match = match
 
     if not best_match:
-        print("   ℹ️ Football-Data: matching fixture not found for referee lookup")
+        print("   в„№пёЏ Football-Data: matching fixture not found for referee lookup")
         return None
 
     # List endpoints can be folded depending on plan/representation. If the
@@ -8379,7 +8379,7 @@ async def _football_data_referee_assignment(home_name, away_name, kickoff_utc=No
                 referees = full_match.get("referees")
                 best_match = full_match
         except Exception as exc:
-            print(f"   ⚠️ Football-Data exact match referee lookup failed: {exc}")
+            print(f"   вљ пёЏ Football-Data exact match referee lookup failed: {exc}")
 
     if not isinstance(referees, list):
         referees = []
@@ -8409,7 +8409,7 @@ async def _football_data_referee_assignment(home_name, away_name, kickoff_utc=No
 
     if not main_ref or not main_ref.get("name"):
         print(
-            f"   ℹ️ Football-Data: fixture found (id={match_id}), "
+            f"   в„№пёЏ Football-Data: fixture found (id={match_id}), "
             f"but main referee is not published in API yet"
         )
         return None
@@ -8425,7 +8425,7 @@ async def _football_data_referee_assignment(home_name, away_name, kickoff_utc=No
     }
 
     print(
-        f"   ✅ Football-Data referee: {result['name']} "
+        f"   вњ… Football-Data referee: {result['name']} "
         f"(match id={match_id})"
     )
     return result
@@ -8433,7 +8433,7 @@ async def _football_data_referee_assignment(home_name, away_name, kickoff_utc=No
 
 async def _rfef_referee_assignment(home_name, away_name, kickoff_utc=None):
     """
-    Official-source lookup for Spanish Primera División.
+    Official-source lookup for Spanish Primera DivisiГіn.
     RFEF publishes referee appointments in news articles. We search the
     current Designaciones feed and recent pages, then inspect matching articles.
     """
@@ -8514,18 +8514,18 @@ async def _rfef_referee_assignment(home_name, away_name, kickoff_utc=None):
             # RFEF appointment cards/images expose role labels in alt/title/text
             # inconsistently. Try common Spanish labels around the referee name.
             patterns = [
-                r"(?:ÁRBITRO|ARBITRO|Árbitro|Arbitro)\s*(?:PRINCIPAL)?\s*[:\-–]?\s*([A-ZÁÉÍÓÚÜÑ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ' -]{5,70})",
-                r"(?:Colegiado|COLEGIADO)\s*[:\-–]?\s*([A-ZÁÉÍÓÚÜÑ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ' -]{5,70})",
+                r"(?:ГЃRBITRO|ARBITRO|ГЃrbitro|Arbitro)\s*(?:PRINCIPAL)?\s*[:\-вЂ“]?\s*([A-ZГЃГ‰ГЌГ“ГљГњГ‘][A-Za-zГЃГ‰ГЌГ“ГљГњГ‘ГЎГ©Г­ГіГєГјГ±' -]{5,70})",
+                r"(?:Colegiado|COLEGIADO)\s*[:\-вЂ“]?\s*([A-ZГЃГ‰ГЌГ“ГљГњГ‘][A-Za-zГЃГ‰ГЌГ“ГљГњГ‘ГЎГ©Г­ГіГєГјГ±' -]{5,70})",
             ]
             for pattern in patterns:
                 match = re.search(pattern, plain)
                 if match:
                     name = re.split(
-                        r"\s+(?:VAR|AVAR|ASISTENTE|CUARTO|4º|CUARTO ÁRBITRO)\b",
+                        r"\s+(?:VAR|AVAR|ASISTENTE|CUARTO|4Вє|CUARTO ГЃRBITRO)\b",
                         match.group(1).strip(),
                         maxsplit=1,
                         flags=re.I,
-                    )[0].strip(" -–:")
+                    )[0].strip(" -вЂ“:")
                     if 5 <= len(name) <= 70:
                         return {
                             "name": name,
@@ -8545,7 +8545,7 @@ async def _sofascore_referee_profile_by_name(referee_name):
     # SofaScore search endpoint is useful even when the future event itself
     # has not yet been populated with referee metadata.
     queries = [referee_name]
-    normalized = referee_name.replace("Jesús", "Jesus").replace("José", "Jose")
+    normalized = referee_name.replace("JesГєs", "Jesus").replace("JosГ©", "Jose")
     if normalized not in queries:
         queries.append(normalized)
 
@@ -8604,53 +8604,53 @@ async def _sofascore_referee_profile_by_name(referee_name):
 # to recognize a name in independent news reports; it never assigns a referee
 # by itself.
 PRIMERA_REFEREE_NAMES = [
-    "Jesús Gil Manzano",
-    "Alejandro José Hernández Hernández",
-    "José Luis Munuera Montero",
-    "Isidro Díaz de Mera Escuderos",
-    "José María Sánchez Martínez",
-    "César Soto Grado",
-    "Juan Martínez Munuera",
-    "Miguel Ángel Ortiz Arias",
+    "JesГєs Gil Manzano",
+    "Alejandro JosГ© HernГЎndez HernГЎndez",
+    "JosГ© Luis Munuera Montero",
+    "Isidro DГ­az de Mera Escuderos",
+    "JosГ© MarГ­a SГЎnchez MartГ­nez",
+    "CГ©sar Soto Grado",
+    "Juan MartГ­nez Munuera",
+    "Miguel ГЃngel Ortiz Arias",
     "Javier Alberola Rojas",
     "Mateo Busquets Ferrer",
-    "Alejandro Quintero González",
-    "Francisco José Hernández Maeso",
-    "Víctor García Verdura",
+    "Alejandro Quintero GonzГЎlez",
+    "Francisco JosГ© HernГЎndez Maeso",
+    "VГ­ctor GarcГ­a Verdura",
     "Ricardo de Burgos Bengoetxea",
-    "Iosu Galech Apezteguía",
+    "Iosu Galech ApezteguГ­a",
     "Miguel Sesma Espinosa",
-    "Adrián Cordero Vega",
-    "Manuel Jesús Orellana Cid",
+    "AdriГЎn Cordero Vega",
+    "Manuel JesГєs Orellana Cid",
     "Luis Bestard Servera",
-    "José Luis Guzmán Mansilla",
-    "Jon Ander González Esteban",
-    "Muñiz Muñoz",
+    "JosГ© Luis GuzmГЎn Mansilla",
+    "Jon Ander GonzГЎlez Esteban",
+    "MuГ±iz MuГ±oz",
 ]
 
 REFEREE_NAME_ALIASES = {
-    "Jesús Gil Manzano": ["jesus gil manzano", "gil manzano", "jesus gil", "j. manzano"],
-    "Alejandro José Hernández Hernández": ["hernandez hernandez", "alejandro jose hernandez"],
-    "José Luis Munuera Montero": ["munuera montero", "jose luis munuera"],
-    "Isidro Díaz de Mera Escuderos": ["diaz de mera", "isidro diaz de mera"],
-    "José María Sánchez Martínez": ["sanchez martinez", "jose maria sanchez martinez"],
-    "César Soto Grado": ["soto grado", "cesar soto grado"],
-    "Juan Martínez Munuera": ["martinez munuera", "juan martinez munuera"],
-    "Miguel Ángel Ortiz Arias": ["ortiz arias", "miguel angel ortiz arias"],
+    "JesГєs Gil Manzano": ["jesus gil manzano", "gil manzano", "jesus gil", "j. manzano"],
+    "Alejandro JosГ© HernГЎndez HernГЎndez": ["hernandez hernandez", "alejandro jose hernandez"],
+    "JosГ© Luis Munuera Montero": ["munuera montero", "jose luis munuera"],
+    "Isidro DГ­az de Mera Escuderos": ["diaz de mera", "isidro diaz de mera"],
+    "JosГ© MarГ­a SГЎnchez MartГ­nez": ["sanchez martinez", "jose maria sanchez martinez"],
+    "CГ©sar Soto Grado": ["soto grado", "cesar soto grado"],
+    "Juan MartГ­nez Munuera": ["martinez munuera", "juan martinez munuera"],
+    "Miguel ГЃngel Ortiz Arias": ["ortiz arias", "miguel angel ortiz arias"],
     "Javier Alberola Rojas": ["alberola rojas", "javier alberola rojas"],
     "Mateo Busquets Ferrer": ["busquets ferrer", "mateo busquets ferrer"],
-    "Alejandro Quintero González": ["quintero gonzalez", "alejandro quintero"],
-    "Francisco José Hernández Maeso": ["hernandez maeso", "francisco jose hernandez maeso"],
-    "Víctor García Verdura": ["garcia verdura", "victor garcia verdura"],
+    "Alejandro Quintero GonzГЎlez": ["quintero gonzalez", "alejandro quintero"],
+    "Francisco JosГ© HernГЎndez Maeso": ["hernandez maeso", "francisco jose hernandez maeso"],
+    "VГ­ctor GarcГ­a Verdura": ["garcia verdura", "victor garcia verdura"],
     "Ricardo de Burgos Bengoetxea": ["de burgos bengoetxea", "ricardo de burgos"],
-    "Iosu Galech Apezteguía": ["galech apezteguia", "iosu galech"],
+    "Iosu Galech ApezteguГ­a": ["galech apezteguia", "iosu galech"],
     "Miguel Sesma Espinosa": ["sesma espinosa", "miguel sesma"],
-    "Adrián Cordero Vega": ["cordero vega", "adrian cordero"],
-    "Manuel Jesús Orellana Cid": ["orellana cid", "manuel jesus orellana"],
+    "AdriГЎn Cordero Vega": ["cordero vega", "adrian cordero"],
+    "Manuel JesГєs Orellana Cid": ["orellana cid", "manuel jesus orellana"],
     "Luis Bestard Servera": ["bestard servera", "luis bestard"],
-    "José Luis Guzmán Mansilla": ["guzman mansilla", "jose luis guzman"],
-    "Jon Ander González Esteban": ["gonzalez esteban", "jon ander gonzalez"],
-    "Muñiz Muñoz": ["muniz munoz"],
+    "JosГ© Luis GuzmГЎn Mansilla": ["guzman mansilla", "jose luis guzman"],
+    "Jon Ander GonzГЎlez Esteban": ["gonzalez esteban", "jon ander gonzalez"],
+    "MuГ±iz MuГ±oz": ["muniz munoz"],
 }
 
 
@@ -8674,7 +8674,7 @@ async def _news_consensus_referee_assignment(home_name, away_name, kickoff_utc=N
     kickoff = parse_datetime_utc(kickoff_utc) if kickoff_utc else None
     date_hint = kickoff.strftime("%d %B %Y") if kickoff else ""
 
-    query = f'"{home_name}" "{away_name}" árbitro referee {date_hint}'.strip()
+    query = f'"{home_name}" "{away_name}" ГЎrbitro referee {date_hint}'.strip()
     rss_url = (
         "https://news.google.com/rss/search?q="
         + quote(query)
@@ -8688,17 +8688,17 @@ async def _news_consensus_referee_assignment(home_name, away_name, kickoff_utc=N
         async with aiohttp.ClientSession(timeout=timeout, headers=headers) as session:
             async with session.get(rss_url, ssl=False) as response:
                 if response.status != 200:
-                    print(f"   ⚠️ News consensus HTTP {response.status}")
+                    print(f"   вљ пёЏ News consensus HTTP {response.status}")
                     return None
                 raw = await response.text(errors="ignore")
     except Exception as exc:
-        print(f"   ⚠️ News consensus lookup failed: {exc}")
+        print(f"   вљ пёЏ News consensus lookup failed: {exc}")
         return None
 
     try:
         root = ET.fromstring(raw)
     except Exception as exc:
-        print(f"   ⚠️ News consensus XML parse failed: {exc}")
+        print(f"   вљ пёЏ News consensus XML parse failed: {exc}")
         return None
 
     home_tokens = [
@@ -8747,7 +8747,7 @@ async def _news_consensus_referee_assignment(home_name, away_name, kickoff_utc=N
                 }
 
     if not evidence:
-        print("   ℹ️ News consensus: no referee evidence for this fixture")
+        print("   в„№пёЏ News consensus: no referee evidence for this fixture")
         return None
 
     ranked = sorted(
@@ -8760,14 +8760,14 @@ async def _news_consensus_referee_assignment(home_name, away_name, kickoff_utc=N
     # Require two genuinely independent publishers.
     if len(publishers) < 2:
         print(
-            f"   ℹ️ News consensus: {name} mentioned by only "
+            f"   в„№пёЏ News consensus: {name} mentioned by only "
             f"{len(publishers)} independent source(s); not accepted"
         )
         return None
 
     sources = list(publishers.values())
     print(
-        f"   ✅ Referee news consensus: {name} | "
+        f"   вњ… Referee news consensus: {name} | "
         f"{len(sources)} independent sources: "
         + ", ".join(x["publisher"] for x in sources[:4])
     )
@@ -8805,7 +8805,7 @@ async def _sofascore_referee_stats(home_name, away_name, kickoff_utc=None):
             kickoff_utc,
         )
     except Exception as exc:
-        print(f"   ⚠️ Football-Data referee pipeline error: {exc}")
+        print(f"   вљ пёЏ Football-Data referee pipeline error: {exc}")
 
     if assignment and assignment.get("name"):
         profile = await _sofascore_referee_profile_by_name(
@@ -8832,8 +8832,8 @@ async def _sofascore_referee_stats(home_name, away_name, kickoff_utc=None):
             "official": assignment.get("official", False),
             "structured": True,
             "message": (
-                "Арбитр найден через Football-Data.org, "
-                "но статистика его карточек пока не найдена."
+                "РђСЂР±РёС‚СЂ РЅР°Р№РґРµРЅ С‡РµСЂРµР· Football-Data.org, "
+                "РЅРѕ СЃС‚Р°С‚РёСЃС‚РёРєР° РµРіРѕ РєР°СЂС‚РѕС‡РµРє РїРѕРєР° РЅРµ РЅР°Р№РґРµРЅР°."
             ),
         }
 
@@ -8846,7 +8846,7 @@ async def _sofascore_referee_stats(home_name, away_name, kickoff_utc=None):
             kickoff_utc,
         )
     except Exception as exc:
-        print(f"   ⚠️ RFEF referee lookup: {exc}")
+        print(f"   вљ пёЏ RFEF referee lookup: {exc}")
 
     if official and official.get("name"):
         profile = await _sofascore_referee_profile_by_name(
@@ -8866,8 +8866,8 @@ async def _sofascore_referee_stats(home_name, away_name, kickoff_utc=None):
             "source_url": official.get("source_url"),
             "official": True,
             "message": (
-                "Назначение подтверждено RFEF, "
-                "статистика арбитра пока не найдена."
+                "РќР°Р·РЅР°С‡РµРЅРёРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅРѕ RFEF, "
+                "СЃС‚Р°С‚РёСЃС‚РёРєР° Р°СЂР±РёС‚СЂР° РїРѕРєР° РЅРµ РЅР°Р№РґРµРЅР°."
             ),
         }
 
@@ -8883,7 +8883,7 @@ async def _sofascore_referee_stats(home_name, away_name, kickoff_utc=None):
             kickoff_utc,
         )
     except Exception as exc:
-        print(f"   ⚠️ Referee news consensus error: {exc}")
+        print(f"   вљ пёЏ Referee news consensus error: {exc}")
 
     if consensus and consensus.get("name"):
         profile = await _sofascore_referee_profile_by_name(consensus["name"])
@@ -8905,8 +8905,8 @@ async def _sofascore_referee_stats(home_name, away_name, kickoff_utc=None):
             "consensus_count": consensus.get("consensus_count"),
             "evidence": consensus.get("evidence"),
             "message": (
-                "Арбитр подтверждён несколькими независимыми источниками; "
-                "статистика арбитра пока не найдена."
+                "РђСЂР±РёС‚СЂ РїРѕРґС‚РІРµСЂР¶РґС‘РЅ РЅРµСЃРєРѕР»СЊРєРёРјРё РЅРµР·Р°РІРёСЃРёРјС‹РјРё РёСЃС‚РѕС‡РЅРёРєР°РјРё; "
+                "СЃС‚Р°С‚РёСЃС‚РёРєР° Р°СЂР±РёС‚СЂР° РїРѕРєР° РЅРµ РЅР°Р№РґРµРЅР°."
             ),
         }
 
@@ -8922,7 +8922,7 @@ async def _sofascore_referee_stats(home_name, away_name, kickoff_utc=None):
             "assigned": False,
             "source": None,
             "official": False,
-            "message": "Назначение арбитра пока не найдено в доступных источниках.",
+            "message": "РќР°Р·РЅР°С‡РµРЅРёРµ Р°СЂР±РёС‚СЂР° РїРѕРєР° РЅРµ РЅР°Р№РґРµРЅРѕ РІ РґРѕСЃС‚СѓРїРЅС‹С… РёСЃС‚РѕС‡РЅРёРєР°С….",
         }
 
     referee = event.get("referee") or {}
@@ -8932,7 +8932,7 @@ async def _sofascore_referee_stats(home_name, away_name, kickoff_utc=None):
             "assigned": False,
             "source": None,
             "official": False,
-            "message": "Назначение арбитра пока не найдено в доступных источниках.",
+            "message": "РќР°Р·РЅР°С‡РµРЅРёРµ Р°СЂР±РёС‚СЂР° РїРѕРєР° РЅРµ РЅР°Р№РґРµРЅРѕ РІ РґРѕСЃС‚СѓРїРЅС‹С… РёСЃС‚РѕС‡РЅРёРєР°С….",
         }
 
     referee_id = referee.get("id")
@@ -8950,19 +8950,19 @@ async def _sofascore_referee_stats(home_name, away_name, kickoff_utc=None):
         "available": matches > 0,
         "assigned": True,
         "id": referee_id,
-        "name": profile_ref.get("name") or referee.get("name") or referee.get("shortName") or "—",
+        "name": profile_ref.get("name") or referee.get("name") or referee.get("shortName") or "вЂ”",
         "matches": matches,
         "yellow_total": round(yellow_total, 1),
         "yellow_average": round(yellow_total / matches, 3) if matches else None,
         "red_average": round((red_total + yellow_red_total) / matches, 3) if matches else None,
         "source": "SofaScore",
         "official": False,
-        "message": None if matches else "Арбитр найден, но статистика карточек недоступна.",
+        "message": None if matches else "РђСЂР±РёС‚СЂ РЅР°Р№РґРµРЅ, РЅРѕ СЃС‚Р°С‚РёСЃС‚РёРєР° РєР°СЂС‚РѕС‡РµРє РЅРµРґРѕСЃС‚СѓРїРЅР°.",
     }
 
 
 async def calculate_cards_analysis(home_team, away_team, odds_event=None):
-    print("\n🟨 YELLOW CARDS V1 → last 30 matches + referee")
+    print("\nрџџЁ YELLOW CARDS V1 в†’ last 30 matches + referee")
 
     kickoff_utc = odds_event.get("commence_time") if isinstance(odds_event, dict) else None
 
@@ -9029,7 +9029,7 @@ async def calculate_cards_analysis(home_team, away_team, odds_event=None):
         "expected_total": round(expected_total, 3) if expected_total is not None else None,
         "referee": referee,
         "quality": round(max(0.0, min(1.0, quality)) * 100.0, 1),
-        "message": None if available else "Недостаточно данных по жёлтым карточкам.",
+        "message": None if available else "РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РґР°РЅРЅС‹С… РїРѕ Р¶С‘Р»С‚С‹Рј РєР°СЂС‚РѕС‡РєР°Рј.",
     }
 
 
@@ -9053,16 +9053,16 @@ async def analyze_match(home_team, away_team):
     )
 
     if isinstance(corners, Exception):
-        print(f"⚠️ Corner analysis error: {corners}")
+        print(f"вљ пёЏ Corner analysis error: {corners}")
         result["corners"] = None
     else:
         result["corners"] = corners
 
     if isinstance(cards, Exception):
-        print(f"⚠️ Yellow-card analysis error: {cards}")
+        print(f"вљ пёЏ Yellow-card analysis error: {cards}")
         result["cards"] = {
             "available": False,
-            "message": "Анализ жёлтых карточек временно недоступен.",
+            "message": "РђРЅР°Р»РёР· Р¶С‘Р»С‚С‹С… РєР°СЂС‚РѕС‡РµРє РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ.",
         }
     else:
         result["cards"] = cards
@@ -9098,15 +9098,15 @@ def format_analysis(result):
     text = _BASE_FORMAT_ANALYSIS_V58(result)
     corners = result.get("corners") or {}
 
-    lines = [text, "", "🟩 <b>КУТОВІ — V59 PRO</b>"]
+    lines = [text, "", "рџџ© <b>РљРЈРўРћР’Р† вЂ” V59 PRO</b>"]
 
     if corners:
         lines.append(
-            f"Очікувано: {result['home']['name']} "
+            f"РћС‡С–РєСѓРІР°РЅРѕ: {result['home']['name']} "
             f"{corners.get('home_expected', 0):.2f} | "
             f"{result['away']['name']} "
             f"{corners.get('away_expected', 0):.2f} | "
-            f"разом {safe_float(corners.get('total_expected'), 0.0):.2f}"
+            f"СЂР°Р·РѕРј {safe_float(corners.get('total_expected'), 0.0):.2f}"
         )
 
         cc = corners.get("candidates") or []
@@ -9115,32 +9115,32 @@ def format_analysis(result):
         if cc:
             b = cc[0]
             lines.append(
-                f"🏆 <b>Краща ставка на кути:</b> {b['label']} — "
+                f"рџЏ† <b>РљСЂР°С‰Р° СЃС‚Р°РІРєР° РЅР° РєСѓС‚Рё:</b> {b['label']} вЂ” "
                 f"{b['selection']} {b['line']} @ {b['odds']}"
             )
             lines.append(
-                f"📈 P: {b['probability']*100:.1f}% | "
+                f"рџ“€ P: {b['probability']*100:.1f}% | "
                 f"Fair: {b['fair_odds']:.2f} | "
                 f"Value: {b['value']*100:+.1f}% | "
                 f"Confidence: {b['confidence']:.1f}%"
             )
             lines.append(
-                f"📊 Stability: {b.get('stability', 0)*100:.0f}% | "
+                f"рџ“Љ Stability: {b.get('stability', 0)*100:.0f}% | "
                 f"Consistency: {b.get('consistency', 0)*100:.0f}% | "
                 f"Grade: {b.get('grade', 'NO BET')}"
             )
             if b.get("bookmaker"):
-                lines.append(f"💰 Букмекер: {b['bookmaker']}")
+                lines.append(f"рџ’° Р‘СѓРєРјРµРєРµСЂ: {b['bookmaker']}")
         else:
-            lines.append("⚠️ Немає corner ставки, яка проходить фільтри моделі.")
+            lines.append("вљ пёЏ РќРµРјР°С” corner СЃС‚Р°РІРєРё, СЏРєР° РїСЂРѕС…РѕРґРёС‚СЊ С„С–Р»СЊС‚СЂРё РјРѕРґРµР»С–.")
 
         if all_lines:
             lines.append("")
-            lines.append("<b>📊 Усі доступні лінії:</b>")
+            lines.append("<b>рџ“Љ РЈСЃС– РґРѕСЃС‚СѓРїРЅС– Р»С–РЅС–С—:</b>")
             for c in all_lines[:20]:
-                marker = "⭐" if c.get("grade") in ("VALUE", "STRONG BET") else "•"
+                marker = "в­ђ" if c.get("grade") in ("VALUE", "STRONG BET") else "вЂў"
                 lines.append(
-                    f"{marker} {c['label']} — {c['selection']} {c['line']:.1f} "
+                    f"{marker} {c['label']} вЂ” {c['selection']} {c['line']:.1f} "
                     f"@ {c['odds']:.2f} | "
                     f"P {c['probability']*100:.1f}% | "
                     f"V {c['value']*100:+.1f}% | "
@@ -9148,25 +9148,25 @@ def format_analysis(result):
                     f"{c.get('grade', 'NO BET')}"
                 )
     else:
-        lines.append("⚠️ Статистика кутових недоступна.")
+        lines.append("вљ пёЏ РЎС‚Р°С‚РёСЃС‚РёРєР° РєСѓС‚РѕРІРёС… РЅРµРґРѕСЃС‚СѓРїРЅР°.")
 
     best = result.get("best_overall")
     if best:
         lines.append("")
         if best.get("type") == "corner":
             lines.append(
-                f"🔥 <b>НАЙКРАЩА СТАВКА МАТЧУ:</b> "
-                f"{best.get('label')} — {best.get('selection')} "
+                f"рџ”Ґ <b>РќРђР™РљР РђР©Рђ РЎРўРђР’РљРђ РњРђРўР§РЈ:</b> "
+                f"{best.get('label')} вЂ” {best.get('selection')} "
                 f"{best.get('line')} @ {best.get('odds')}"
             )
         else:
-            lines.append("🔥 <b>НАЙКРАЩА СТАВКА МАТЧУ:</b> основний футбольний ринок")
+            lines.append("рџ”Ґ <b>РќРђР™РљР РђР©Рђ РЎРўРђР’РљРђ РњРђРўР§РЈ:</b> РѕСЃРЅРѕРІРЅРёР№ С„СѓС‚Р±РѕР»СЊРЅРёР№ СЂРёРЅРѕРє")
 
     return "\n".join(lines)
 
 
 # ============================================================
-# FASTAPI WEB API — V25 CORE + REAL xG + CORNERS
+# FASTAPI WEB API вЂ” V25 CORE + REAL xG + CORNERS
 # ============================================================
 
 WEB_TEAMS = []
@@ -9346,7 +9346,7 @@ def build_web_response(result):
             f"at {best_bet['probability']:.1f}% model probability."
         )
     else:
-        rating, risk = "NO_VALUE", "—"
+        rating, risk = "NO_VALUE", "вЂ”"
         summary = "V25 did not find a market that passes both Value and Confidence filters."
 
     return {
@@ -9434,7 +9434,7 @@ def build_web_response(result):
         },
         "cards": result.get("cards") or {
             "available": False,
-            "message": "Анализ жёлтых карточек недоступен.",
+            "message": "РђРЅР°Р»РёР· Р¶С‘Р»С‚С‹С… РєР°СЂС‚РѕС‡РµРє РЅРµРґРѕСЃС‚СѓРїРµРЅ.",
         },
         "odds": odds,
         "bookmakers_count": result.get("bookmakers_count", 0),
@@ -9454,7 +9454,7 @@ def build_web_response(result):
 
 
 # ============================================================
-# FOOTBALLISTIKA — BET OF THE DAY JOURNAL / MONTHLY STATISTICS
+# FOOTBALLISTIKA вЂ” BET OF THE DAY JOURNAL / MONTHLY STATISTICS
 # ============================================================
 
 STATS_DB_PATH = Path(__file__).resolve().with_name("footballistika_stats.sqlite3")
@@ -9543,12 +9543,12 @@ def save_bet_of_day(web_response, home_team, away_team):
             # Freeze after settlement or after kickoff.
             if existing["status"] in ("win", "loss", "void"):
                 row = dict(existing)
-                print(f"📒 STATS → already settled: {row['home_team']} - {row['away_team']} | {row['status']}")
+                print(f"рџ“’ STATS в†’ already settled: {row['home_team']} - {row['away_team']} | {row['status']}")
                 return row
             kickoff_dt = parse_datetime_utc(existing["kickoff_utc"] or kickoff_utc)
             if kickoff_dt is not None and kickoff_dt <= now:
                 row = dict(existing)
-                print(f"📒 STATS → frozen after kickoff: {row['home_team']} - {row['away_team']}")
+                print(f"рџ“’ STATS в†’ frozen after kickoff: {row['home_team']} - {row['away_team']}")
                 return row
             conn.execute(
                 """
@@ -9583,7 +9583,7 @@ def save_bet_of_day(web_response, home_team, away_team):
         saved = conn.execute("SELECT * FROM daily_bets WHERE match_key = ?", (key,)).fetchone()
         row = dict(saved) if saved else None
         if row:
-            print(f"📒 STATS SAVED → {row['home_team']} - {row['away_team']} | {row.get('selection') or 'NO BET'} | status={row['status']}")
+            print(f"рџ“’ STATS SAVED в†’ {row['home_team']} - {row['away_team']} | {row.get('selection') or 'NO BET'} | status={row['status']}")
         return row
 
 
@@ -9591,23 +9591,23 @@ def _settle_market(market, selection, home_goals, away_goals):
     key = str(market or selection or "").strip().lower().replace(" ", "_")
     total = home_goals + away_goals
 
-    if key in {"home_win", "п1", "home"}:
+    if key in {"home_win", "Рї1", "home"}:
         return home_goals > away_goals
-    if key in {"away_win", "п2", "away"}:
+    if key in {"away_win", "Рї2", "away"}:
         return away_goals > home_goals
-    if key in {"draw", "x", "нічия", "ничья"}:
+    if key in {"draw", "x", "РЅС–С‡РёСЏ", "РЅРёС‡СЊСЏ"}:
         return home_goals == away_goals
-    if key in {"double_home", "1x", "1х"}:
+    if key in {"double_home", "1x", "1С…"}:
         return home_goals >= away_goals
-    if key in {"double_away", "x2", "х2"}:
+    if key in {"double_away", "x2", "С…2"}:
         return away_goals >= home_goals
-    if key in {"over_25", "over25", "o2.5", "тб2.5", "тб_2.5"}:
+    if key in {"over_25", "over25", "o2.5", "С‚Р±2.5", "С‚Р±_2.5"}:
         return total >= 3
-    if key in {"under_25", "under25", "u2.5", "тм2.5", "тм_2.5"}:
+    if key in {"under_25", "under25", "u2.5", "С‚Рј2.5", "С‚Рј_2.5"}:
         return total <= 2
-    if key in {"btts_yes", "оз_—_да", "оз_—_так", "btts"}:
+    if key in {"btts_yes", "РѕР·_вЂ”_РґР°", "РѕР·_вЂ”_С‚Р°Рє", "btts"}:
         return home_goals > 0 and away_goals > 0
-    if key in {"btts_no", "оз_—_нет", "оз_—_ні"}:
+    if key in {"btts_no", "РѕР·_вЂ”_РЅРµС‚", "РѕР·_вЂ”_РЅС–"}:
         return home_goals == 0 or away_goals == 0
     return None
 
@@ -9659,7 +9659,7 @@ async def settle_pending_bets():
             )
             matches = (data or {}).get("matches", [])
         except Exception as exc:
-            print(f"⚠️ STATS settlement failed for team {home_id}: {exc}")
+            print(f"вљ пёЏ STATS settlement failed for team {home_id}: {exc}")
             continue
 
         for row in team_rows:
@@ -9783,7 +9783,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$|^https://footballistikka\.onrender\.com$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -9818,7 +9818,7 @@ async def statistics(month: str | None = None):
         await settle_pending_bets()
     except Exception as exc:
         settlement_warning = str(exc)
-        print(f"⚠️ STATS settlement skipped: {repr(exc)}")
+        print(f"вљ пёЏ STATS settlement skipped: {repr(exc)}")
 
     payload = read_month_statistics(month)
     if settlement_warning:
@@ -9872,5 +9872,6 @@ async def analyze_web_match(match: MatchRequest):
         response["journal_entry"] = journal_entry
         return response
     except Exception as exc:
-        print(f"❌ WEB ANALYZE ERROR: {repr(exc)}")
+        print(f"вќЊ WEB ANALYZE ERROR: {repr(exc)}")
         raise HTTPException(status_code=500, detail=f"Analysis failed: {exc}") from exc
+
