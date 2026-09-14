@@ -25,10 +25,10 @@ a { color: inherit; text-decoration: none; }
 
 .site-shell { min-height: 100vh; }
 .site-header { position: sticky; top: 0; z-index: 50; height: 78px; padding: 0 34px; display: flex; align-items: center; gap: 34px; border-bottom: 1px solid rgba(208,221,238,.8); background: rgba(255,255,255,.92); backdrop-filter: blur(18px); box-shadow: 0 5px 24px rgba(42,75,122,.05); }
-.brand-block { min-width: 210px; display: flex; align-items: center; gap: 11px; }
+.brand-block { min-width: 250px; display: flex; align-items: center; gap: 11px; }
 .logo-mark { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #ddffeb, #eef7ff); border: 1px solid #bfe9d0; box-shadow: inset 0 0 0 4px rgba(255,255,255,.75); }
 .logo-ball { font-size: 26px; transform: translateY(-1px); }
-.brand-name { font-size: 24px; line-height: 1; font-weight: 900; letter-spacing: -.7px; color: #101f41; }
+.brand-name { font-size: 23px; line-height: 1; font-weight: 900; letter-spacing: -.7px; color: #101f41; }
 .brand-tagline { margin-top: 5px; font-size: 8px; letter-spacing: 1.65px; font-weight: 800; color: #7285a3; }
 .main-nav { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .main-nav a { display: flex; align-items: center; gap: 7px; padding: 11px 14px; border-radius: 11px; font-size: 14px; font-weight: 700; color: #263550; transition: .2s ease; }
@@ -956,3 +956,11 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+
+/* Footballistika brand polish */
+.brand-name { letter-spacing: -0.8px; }
+.hero-copy h1 span { background: linear-gradient(135deg, #08b75a, #078a46); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.header-badge { min-width: 205px; }
+@media (max-width: 1180px) { .brand-block { min-width: 220px; } .brand-name { font-size: 21px; } }
+@media (max-width: 760px) { .brand-name { font-size: 20px; } .brand-tagline { letter-spacing: 1.1px; } }
