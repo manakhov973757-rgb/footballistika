@@ -1,0 +1,31 @@
+﻿# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Footballistika local data
+.football_ai_cache/
+*.sqlite
+*.sqlite3
+*.db
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+node_modules/
+dist/
+
+# Logs
+*.log
+
+# IDE / Windows
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
