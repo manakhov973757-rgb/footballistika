@@ -1,0 +1,4 @@
+﻿User-agent: *
+Allow: /
+
+Sitemap: https://footballistikka.onrender.com/sitemap.xml
