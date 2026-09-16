@@ -5468,12 +5468,8 @@ async def get_fotmob_xg_for_team(team, before_date, limit=XG_MATCHES, _force_ref
     if _v332_payload_safe_for_cutoff(master, cutoff, limit):
         FOTMOB_CACHE[cache_key] = master
         print(f"   ⚡ xG V332 MASTER CACHE: {target_name} → {limit}/{limit}")
-        # Refresh only when the aggregate is old; never make the visitor wait.
-        if master_age is None or master_age > CACHE_TTL_FOTMOB_XG_AGG:
-            _v332_schedule_full_refresh(
-                team, before_date, limit, f"v332:{canonical_key}"
-            )
-            print(f"   ♻️ xG V332 background refresh scheduled: {target_name}")
+        # Production web process is read-only for heavy xG backfills.
+        # Never start a FotMob crawler from a visitor-facing Render instance.
         return master
 
     # 3) Migrate any complete V330/V331 aggregate. This also repairs the exact
@@ -5497,12 +5493,7 @@ async def get_fotmob_xg_for_team(team, before_date, limit=XG_MATCHES, _force_ref
     # The current analysis immediately falls back to the already-existing V25
     # history/form model; once the master cache exists, REAL xG is blended exactly
     # as before. This makes *every* TOP-5 pairing responsive, not only warmed teams.
-    # IMPORTANT: never start a heavy FotMob crawl from a visitor request.
-    # On a small Render instance even an asyncio background crawl competes for
-    # CPU/network with Football-Data and Odds API and can turn a 3-5 second
-    # analysis into a 60-100+ second request. Missing masters are refreshed only
-    # by the idle prewarmer below. The visitor immediately uses the V25 base model.
-    print(f"   🚀 xG TOP-5 FAST MISS: {target_name} → no request-time crawl; V25 fallback")
+    print(f"   🚀 xG TOP-5 FAST MISS: {target_name} → no web-process backfill; request continues")
     return {
         "available": False,
         "matches": [],
@@ -9115,7 +9106,7 @@ async def analyze_match(home_team, away_team):
 
     result["performance"] = {
         "total_seconds": round(time.perf_counter() - total_started, 2),
-        "mode": "v3.5.1-top5-priority",
+        "mode": "v3.5.0-top5-fast",
     }
     print(f"⏱️ TOTAL analysis: {time.perf_counter() - total_started:.1f}s")
     return result
@@ -9136,8 +9127,6 @@ def format_analysis(result):
 
 WEB_TEAMS = []
 TOP5_PREWARM_TASK = None
-ACTIVE_ANALYSES = 0
-LAST_ANALYZE_FINISHED = time.monotonic()
 TOP5_PREWARM_STATE = {
     "running": False,
     "total": 0,
@@ -9154,52 +9143,34 @@ def _top5_master_ready(team, limit=XG_MATCHES):
 
 
 async def _prewarm_top5_caches():
-    """Idle-only, sequential REAL-xG warmer for the whole TOP-5 catalogue.
+    """Warm durable REAL-xG masters for the entire current TOP-5 catalogue.
 
-    The previous implementation queued ~100 heavy FotMob jobs at startup. They
-    were technically background tasks, but on Render they still competed with
-    user-facing API calls. This worker waits for a long idle window and refreshes
-    only ONE team at a time. It pauses whenever a visitor analysis is active.
+    Runs only in background. It never delays FastAPI startup and never makes an
+    /analyze visitor wait. Existing masters are skipped. Missing masters are
+    queued through the same isolated refresh mechanism used by normal requests.
     """
     TOP5_PREWARM_STATE["running"] = True
     TOP5_PREWARM_STATE["started_at"] = datetime.now(timezone.utc).isoformat()
     try:
         teams = await ensure_teams_loaded()
         TOP5_PREWARM_STATE["total"] = len(teams)
-        TOP5_PREWARM_STATE["ready"] = sum(1 for t in teams if _top5_master_ready(t))
-        TOP5_PREWARM_STATE["scheduled"] = 0
-
-        # Give the service time to become usable after a deploy/cold start.
-        await asyncio.sleep(300)
-
+        ready = 0
+        scheduled = 0
+        before_date = datetime.now(timezone.utc).isoformat()
         for team in teams:
             if _top5_master_ready(team):
+                ready += 1
                 continue
-
-            # Never compete with a visitor. Wait until the service has been idle
-            # for at least 90 seconds.
-            while ACTIVE_ANALYSES > 0 or (time.monotonic() - LAST_ANALYZE_FINISHED) < 90:
-                await asyncio.sleep(5)
-
-            before_date = datetime.now(timezone.utc).isoformat()
-            try:
-                async with FOTMOB_XG_BACKGROUND_SEMAPHORE:
-                    result = await _build_fotmob_xg_full_v332(
-                        team, before_date, XG_MATCHES, _force_refresh=True
-                    )
-                if isinstance(result, dict) and int(result.get("sample") or 0) >= XG_MATCHES:
-                    canonical = _v332_xg_canonical_key(team.get("name", ""), XG_MATCHES)
-                    _disk_cache_save(canonical, result)
-                    TOP5_PREWARM_STATE["ready"] += 1
-            except asyncio.CancelledError:
-                raise
-            except Exception as exc:
-                print(f"⚠️ TOP-5 idle warm {team.get('name', '')}: {exc}")
-
-            # Leave breathing room between teams even when the site is idle.
-            await asyncio.sleep(15)
-    except asyncio.CancelledError:
-        raise
+            canonical = _v332_xg_canonical_key(team.get("name", ""), XG_MATCHES)
+            _v332_schedule_full_refresh(
+                team, before_date, XG_MATCHES, f"startup:{canonical}"
+            )
+            scheduled += 1
+            # Yield so startup warming cannot monopolize the event loop.
+            await asyncio.sleep(0)
+        TOP5_PREWARM_STATE["ready"] = ready
+        TOP5_PREWARM_STATE["scheduled"] = scheduled
+        print(f"🚀 TOP-5 PREWARM: {ready}/{len(teams)} ready; {scheduled} background refreshes queued")
     except Exception as exc:
         print(f"⚠️ TOP-5 PREWARM error: {exc}")
     finally:
@@ -9344,18 +9315,9 @@ def build_web_response(result):
     candidates = [x for x in (map_candidate(v) for v in model.get("candidates", [])) if x]
     best_bet = map_candidate(model.get("best"))
 
-    # V344: analytical candidates may be displayed during xG backfill,
-    # but Bet of the Day must have a complete 10/10 REAL xG sample for BOTH teams.
-    _best_xg_quality = safe_float(
-        best_bet.get("real_xg_quality") if isinstance(best_bet, dict) else 0.0,
-        0.0,
-    )
-    if best_bet and _best_xg_quality < 1.0:
-        print(
-            f"🚫 BET OF DAY: {best_bet.get('selection')} rejected — "
-            f"REAL xG quality {_best_xg_quality:.2f} < 1.00 (need 10/10 for both teams)"
-        )
-        best_bet = None
+    # Production headline rule: the model candidate remains eligible when REAL xG
+    # is unavailable; the established V25/base model is the fallback. The public
+    # recommendation is gated by Confidence below.
 
     # V335: headline Bet of the Day requires the established confidence floor.
     if best_bet and safe_float(best_bet.get("confidence"), 0.0) < MIN_CONFIDENCE:
@@ -9404,7 +9366,7 @@ def build_web_response(result):
 
     return {
         "status": "success",
-        "version": "3.5.1-top5-priority-production-v25-xg",
+        "version": "3.5.0-top5-fast-production-v25-xg",
         "match": {
             "home_team": home.get("name"),
             "away_team": away.get("name"),
@@ -9810,14 +9772,10 @@ init_stats_db()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global TOP5_PREWARM_TASK
-    # Load the current TOP-5 catalogue and warm every missing REAL-xG master in
-    # the background. Server becomes available immediately.
-    TOP5_PREWARM_TASK = asyncio.create_task(_prewarm_top5_caches())
+    # Visitor-facing Render process must never run historical xG crawlers.
+    # Existing complete cache is still used immediately; a cache miss falls back
+    # to the proven V25/base model without consuming background CPU/network.
     yield
-    if TOP5_PREWARM_TASK and not TOP5_PREWARM_TASK.done():
-        TOP5_PREWARM_TASK.cancel()
-    # Cancel outstanding background refreshes cleanly on shutdown.
     for task in list(FOTMOB_XG_REFRESH_TASKS):
         if not task.done():
             task.cancel()
@@ -9827,7 +9785,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Football AI Analyst",
     description="Footballistika web engine with real xG and Bet of the Day",
-    version="3.5.1",
+    version="3.5.0",
     lifespan=lifespan,
 )
 
@@ -9840,26 +9798,12 @@ app.add_middleware(
 )
 
 
-@app.middleware("http")
-async def prioritize_analyze_requests(request, call_next):
-    global ACTIVE_ANALYSES, LAST_ANALYZE_FINISHED
-    is_analyze = request.url.path == "/analyze"
-    if is_analyze:
-        ACTIVE_ANALYSES += 1
-    try:
-        return await call_next(request)
-    finally:
-        if is_analyze:
-            ACTIVE_ANALYSES = max(0, ACTIVE_ANALYSES - 1)
-            LAST_ANALYZE_FINISHED = time.monotonic()
-
-
 @app.get("/")
 async def root():
     return {
         "status": "ok",
         "app": "Football AI Analyst",
-        "version": "3.5.1-top5-priority-production-v25-xg",
+        "version": "3.5.0-top5-fast-production-v25-xg",
         "model": "V25 core + FotMob real xG + Bet of the Day",
     }
 
@@ -9868,7 +9812,7 @@ async def root():
 async def health():
     return {
         "status": "healthy",
-        "version": "3.5.1-top5-priority-production-v25-xg",
+        "version": "3.5.0-top5-fast-production-v25-xg",
         "teams_loaded": len(WEB_TEAMS),
         "top5_xg_cache": {
             "ready": sum(1 for t in WEB_TEAMS if _top5_master_ready(t)),
