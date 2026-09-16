@@ -9,7 +9,6 @@ import {
   CircleDollarSign,
   Clock3,
   Database,
-  Flag,
   Goal,
   Home,
   Info,
@@ -25,15 +24,14 @@ import {
 } from "lucide-react";
 import "./App.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_URL || "https://name-footballistika-api.onrender.com";
 
 const ANALYSIS_STAGES = [
   { label: "Загружаем форму команд", icon: "01" },
   { label: "Считаем REAL xG", icon: "02" },
-  { label: "Сверяем реальные коэффициенты", icon: "03" },
-  { label: "Ищем Value и Confidence", icon: "04" },
-  { label: "Проверяем угловые", icon: "05" },
-  { label: "Анализируем жёлтые карточки и арбитра", icon: "06" },
+  { label: "Строим вероятности и Poisson", icon: "03" },
+  { label: "Сверяем реальные коэффициенты", icon: "04" },
+  { label: "Проверяем Value и Confidence", icon: "05" },
 ];
 
 const teamInitials = (name = "") => {
@@ -184,19 +182,6 @@ const prettyBetLabel = (bet) => {
       normalized.match(/([0-9]+(?:[.,][0-9]+)?)\s*(?:under|меньше)/i);
     if (underMatch && !normalized.includes("corner") && !normalized.includes("углов")) {
       return `ТМ ${underMatch[1].replace(",", ".")}`;
-    }
-
-    // Corners.
-    if (normalized.includes("corner") || normalized.includes("углов")) {
-      const line = normalized.match(/[0-9]+(?:[.,][0-9]+)?/);
-      const lineText = line ? line[0].replace(",", ".") : "";
-      if (normalized.includes("under") || normalized.includes("меньше") || normalized.includes("тм")) {
-        return `ТМ ${lineText} угловых`.trim();
-      }
-      if (normalized.includes("over") || normalized.includes("больше") || normalized.includes("тб")) {
-        return `ТБ ${lineText} угловых`.trim();
-      }
-      return lineText ? `Тотал ${lineText} угловых` : "Угловые";
     }
   }
 
@@ -412,7 +397,7 @@ function AboutPage() {
         <div>
           <span className="hero-kicker"><Info size={16} /> FOOTBALLISTIKA</span>
           <h1>О <span>проекте</span></h1>
-          <p>Footballistika объединяет форму команд, REAL xG, Poisson-модель, реальные букмекерские коэффициенты, Value, Confidence и анализ угловых в одном понятном интерфейсе.</p>
+          <p>Footballistika объединяет форму команд, REAL xG, Poisson-модель, реальные букмекерские коэффициенты, Value и Confidence в одном понятном интерфейсе.</p>
         </div>
       </section>
       <section className="about-grid">
@@ -430,6 +415,7 @@ function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingStage, setLoadingStage] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [error, setError] = useState("");
   const [activePage, setActivePage] = useState("home");
   const resultsRef = useRef(null);
@@ -442,6 +428,18 @@ function App() {
     const timer = window.setInterval(() => {
       setLoadingStage((current) => Math.min(current + 1, ANALYSIS_STAGES.length - 1));
     }, 1100);
+    return () => window.clearInterval(timer);
+  }, [loading]);
+
+  useEffect(() => {
+    if (!loading) {
+      setElapsedSeconds(0);
+      return undefined;
+    }
+    const startedAt = Date.now();
+    const timer = window.setInterval(() => {
+      setElapsedSeconds(Math.floor((Date.now() - startedAt) / 1000));
+    }, 1000);
     return () => window.clearInterval(timer);
   }, [loading]);
 
@@ -468,7 +466,7 @@ function App() {
       }, 120);
     } catch (err) {
       console.error(err);
-      setError(err?.message || "Не удалось получить анализ. Проверь backend на порту 8000.");
+      setError(err?.message || "Не удалось получить анализ. Попробуй повторить запрос.");
     } finally {
       setLoading(false);
     }
@@ -483,13 +481,12 @@ function App() {
   const goals = result?.goals || {};
   const btts = result?.btts || {};
   const odds = result?.odds || {};
-  const corners = result?.corners || {};
-  const cards = result?.cards || {};
   const markets = result?.betting_markets || [];
-  // "Ставка дня" должна строго совпадать с финальной ставкой модели.
-  // best_overall в backend может содержать сырой объект (например, corner/football)
-  // и не является источником для главной футбольной рекомендации на UI.
-  const bestBet = result?.best_bet || markets?.[0] || null;
+  // Strict UI gate: a bet is shown as Bet of the Day only with Confidence >= 55%.
+  const rawBestBet = result?.best_bet || null;
+  const rawBestBetConfidence = rawBestBet ? pct(rawBestBet.confidence) : null;
+  const bestBet = rawBestBet && rawBestBetConfidence >= 55 ? rawBestBet : null;
+  const rejectedByConfidence = Boolean(rawBestBet && rawBestBetConfidence < 55);
   const ai = result?.ai_assessment || {};
 
   const strongestMarket = useMemo(() => {
@@ -499,20 +496,17 @@ function App() {
     const confidence = pct(bestBet.confidence);
     const v = valueNumber(bestBet.value);
     const status = String(bestBet.status || bestBet.grade || "").toUpperCase();
-    const strong = status.includes("STRONG") || (v >= 10 && confidence >= 50);
+    const strong = confidence >= 55 && (status.includes("STRONG") || v > 0);
     return { selection, probability, confidence, value: v, strong };
   }, [bestBet]);
 
   const likelyScore = result?.most_likely_scores?.[0];
-  const cornersAvailable = Boolean(corners?.available);
-  const cornersQuality = pct(corners?.quality?.total ?? corners?.quality ?? corners?.confidence ?? 0);
-  const cardsAvailable = Boolean(cards?.available);
-  const cardsQuality = pct(cards?.quality ?? 0);
-  const referee = cards?.referee || {};
 
   const modelRecommendation = strongestMarket
-    ? `Обнаружена ${strongestMarket.strong ? "высокая" : "положительная"} ценность в ставке ${strongestMarket.selection}`
-    : "Сейчас модель не видит ставки с достаточным Value и Confidence";
+    ? `Ставка дня: ${prettyBetLabel(bestBet)} · Confidence ${percentText(bestBet?.confidence)}`
+    : rejectedByConfidence
+      ? `Value на этот матч не найдено · Confidence ${percentText(rawBestBet?.confidence)} < 55%`
+      : "Value на этот матч не найдено";
 
   return (
     <div className="site-shell">
@@ -542,9 +536,9 @@ function App() {
           <div className="hero-copy">
             <span className="hero-kicker"><Sparkles size={16} /> FOOTBALLISTIKA AI ANALYTICS</span>
             <h1><span>Footballistika.</span> Матч в цифрах</h1>
-            <p>Форма, REAL xG, вероятности, коэффициенты, Value, угловые и карточки — в одном анализе матча.</p>
+            <p>Форма, REAL xG, вероятности, коэффициенты, Value и Confidence — в одном анализе матча.</p>
             <div className="hero-features">
-              <div><div className="feature-icon green"><BarChart3 size={23} /></div><span><strong>Реальные данные</strong><small>xG, форма, угловые, коэффициенты</small></span></div>
+              <div><div className="feature-icon green"><BarChart3 size={23} /></div><span><strong>Реальные данные</strong><small>xG, форма и реальные коэффициенты</small></span></div>
               <div><div className="feature-icon yellow"><Zap size={23} /></div><span><strong>AI анализ</strong><small>Вероятность, Value и Confidence</small></span></div>
               <div><div className="feature-icon mint"><Shield size={23} /></div><span><strong>Без фантазий</strong><small>Только то, что подтверждено данными</small></span></div>
             </div>
@@ -561,9 +555,9 @@ function App() {
             <div className="engine-pill"><span className="live-dot" /> {result?.version || "ENGINE ONLINE"}</div>
           </div>
           <div className="selector-row">
-            <label className="team-field"><span>Хозяева</span><input placeholder="Введите команду хозяев" value={homeTeam} onChange={(e) => setHomeTeam(e.target.value)} onKeyDown={onEnter} /></label>
+            <label className="team-field"><span>Хозяева</span><input aria-label="Команда хозяев" autoComplete="off" placeholder="Например, Bayern Munich" value={homeTeam} onChange={(e) => setHomeTeam(e.target.value)} onKeyDown={onEnter} /></label>
             <div className="selector-vs">VS</div>
-            <label className="team-field"><span>Гости</span><input placeholder="Введите команду гостей" value={awayTeam} onChange={(e) => setAwayTeam(e.target.value)} onKeyDown={onEnter} /></label>
+            <label className="team-field"><span>Гости</span><input aria-label="Команда гостей" autoComplete="off" placeholder="Например, Union Berlin" value={awayTeam} onChange={(e) => setAwayTeam(e.target.value)} onKeyDown={onEnter} /></label>
             <button className="analyze-btn" onClick={analyzeMatch} disabled={loading || !homeTeam.trim() || !awayTeam.trim()}>
               {loading ? <><Loader2 className="spin" size={19} /> Анализируем...</> : <><Brain size={19} /> Анализировать <ChevronRight size={18} /></>}
             </button>
@@ -581,6 +575,7 @@ function App() {
               <span className="loader-kicker">LIVE AI ANALYSIS</span>
               <h2>Собираем лучший сигнал для матча</h2>
               <p>{ANALYSIS_STAGES[loadingStage].label}</p>
+              <div className="analysis-runtime"><Clock3 size={15} /><span>{elapsedSeconds} сек.</span>{elapsedSeconds >= 20 ? <strong>Первый анализ после перезапуска сервера может занять больше времени — строится xG-кэш.</strong> : null}</div>
               <div className="analysis-progress-track"><span style={{ width: `${((loadingStage + 1) / ANALYSIS_STAGES.length) * 100}%` }} /></div>
               <div className="analysis-steps">
                 {ANALYSIS_STAGES.map((stage, index) => (
@@ -626,7 +621,7 @@ function App() {
               <div className="ai-recommendation">
                 <div className="ai-icon"><Bot size={25} /></div>
                 <div><span>AI РЕКОМЕНДАЦИЯ</span><strong>{modelRecommendation}</strong></div>
-                {strongestMarket ? <span className={`recommendation-chip ${strongestMarket.strong ? "strong" : "value"}`}>{strongestMarket.strong ? "СИЛЬНАЯ СТАВКА" : "ВАЛУЙНАЯ СТАВКА"}</span> : <span className="recommendation-chip neutral">НЕТ СТАВКИ</span>}
+                {bestBet ? <span className="recommendation-chip strong">СТАВКА ДНЯ</span> : <span className="recommendation-chip neutral">НЕТ СТАВКИ</span>}
               </div>
             </section>
 
@@ -634,21 +629,19 @@ function App() {
               <span className="active"><BarChart3 size={17} />Общий анализ</span>
               <span><CircleDollarSign size={17} />Коэффициенты</span>
               <span><Database size={17} />Статистика</span>
-              <span><Flag size={17} />Угловые</span>
-              <span><Shield size={17} />Карточки</span>
               <span><Swords size={17} />H2H</span>
               <span><TrendingUp size={17} />Форма команд</span>
             </div>
 
             {bestBet ? (
-              <section id="value" className={`hero-bet-card day-bet-card ${strongestMarket?.strong ? "strong" : "value"}`}>
+              <section id="value" className="hero-bet-card day-bet-card strong">
                 <div className="day-bet-head">
                   <div className="day-bet-trophy"><Trophy size={34} /></div>
                   <div className="day-bet-title">
                     <h2>СТАВКА ДНЯ</h2>
-                    <span>ЛУЧШАЯ ВОЗМОЖНОСТЬ СЕГОДНЯ</span>
+                    <span>ПРОШЛА ФИЛЬТР CONFIDENCE ≥ 55%</span>
                   </div>
-                  <div className="top-value-pill">👑 TOP VALUE</div>
+                  <div className="top-value-pill">✓ CONFIDENCE FILTER</div>
                 </div>
 
                 <div className="day-bet-body">
@@ -658,7 +651,7 @@ function App() {
                     <span className="day-bet-description">{prettyBetDescription(bestBet)}</span>
                     <div className="day-bet-badges">
                       <OddsStatus bet={bestBet} />
-                      <span className="high-value-badge"><TrendingUp size={16} /> ВЫСОКИЙ VALUE</span>
+                      <span className="high-value-badge"><TrendingUp size={16} /> CONFIDENCE {percentText(bestBet.confidence)}</span>
                     </div>
                   </div>
 
@@ -678,6 +671,11 @@ function App() {
                       <strong>{valuePercent(bestBet.value)}</strong>
                       <small>преимущество модели</small>
                     </div>
+                    <div className="day-stat-card confidence-card">
+                      <span>Confidence</span>
+                      <strong>{percentText(bestBet.confidence)}</strong>
+                      <Progress value={bestBet.confidence} tone="green" />
+                    </div>
                     <button className="day-bet-cta" type="button" onClick={() => document.getElementById("statistics")?.scrollIntoView({ behavior: "smooth" })}>
                       <TrendingUp size={24} />
                       ПОДРОБНЫЙ АНАЛИЗ
@@ -688,11 +686,17 @@ function App() {
 
                 <div className="day-bet-note">
                   <Sparkles size={18} />
-                  <span>Модель показывает высокую вероятность прохода при положительном Value <strong>{valuePercent(bestBet.value)}</strong> и Confidence <strong>{percentText(bestBet.confidence)}</strong>.</span>
+                  <span>Рекомендация прошла минимальный порог Confidence <strong>55%</strong>. Текущий Confidence: <strong>{percentText(bestBet.confidence)}</strong>, Value: <strong>{valuePercent(bestBet.value)}</strong>.</span>
                 </div>
               </section>
             ) : (
-              <section className="hero-bet-card no-value"><div className="bet-ribbon"><Trophy size={19} /> ГЛАВНАЯ СТАВКА</div><div className="no-value-copy"><h2>Сейчас явной Value-ставки нет</h2><p>Это тоже полезный результат: модель не предлагает ставку ради ставки.</p></div></section>
+              <section className="hero-bet-card no-value">
+                <div className="bet-ribbon"><Trophy size={19} /> ГЛАВНАЯ СТАВКА</div>
+                <div className="no-value-copy">
+                  <h2>Value на этот матч не найдено</h2>
+                  <p>{rejectedByConfidence ? <>Confidence <strong>{percentText(rawBestBet?.confidence)}</strong> ниже минимального порога <strong>55%</strong>, поэтому ставка дня не публикуется.</> : <>Ни один вариант не прошёл минимальный фильтр Confidence <strong>55%</strong>.</>}</p>
+                </div>
+              </section>
             )}
 
             <div id="statistics" className="dashboard-grid">
@@ -743,78 +747,15 @@ function App() {
 
                 <div className="side-card"><SectionTitle icon={<BarChart3 size={20} />} title="Ожидаемые голы (xG)" /><div className="xg-versus"><div><span>{result.match.home_team}</span><strong>{number(xg.home, 3)}</strong><Progress value={Math.min(100, pct(xg.home) * 28)} tone="yellow" /></div><div className="xg-divider" /><div><span>{result.match.away_team}</span><strong>{number(xg.away, 3)}</strong><Progress value={Math.min(100, pct(xg.away) * 28)} tone="green" /></div></div><div className="mini-stat-row"><span>Base xG</span><strong>{number(xg.base_home, 3)} / {number(xg.base_away, 3)}</strong></div><div className="mini-stat-row"><span>REAL xG sample</span><strong>{xg?.real?.home_sample ?? "—"} / {xg?.real?.away_sample ?? "—"}</strong></div><div className="mini-stat-row"><span>История</span><strong>{result?.history?.home_matches ?? 0} / {result?.history?.away_matches ?? 0}</strong></div></div>
 
-                <div className="side-card"><SectionTitle icon={<Flag size={20} />} title="Анализ угловых" badge={cornersAvailable ? "LIVE" : "N/A"} />{cornersAvailable ? <><div className="corner-versus"><div><span>{result.match.home_team}</span><strong>{number(corners.home, 2)}</strong></div><div><span>{result.match.away_team}</span><strong>{number(corners.away, 2)}</strong></div></div><div className="corner-total-box"><span>Ожидаемый тотал</span><strong>{number(corners.total, 2)}</strong></div>{cornersQuality ? <div className="quality-block"><div className="quality-ring" style={{ "--quality": `${Math.min(100, cornersQuality) * 3.6}deg` }}><span>{Math.round(cornersQuality)}%</span></div><div><strong>Качество прогноза</strong><span>Стабильность модели угловых</span></div></div> : null}</> : <div className="empty-side">{corners?.message || "Данные угловых недоступны."}</div>}</div>
-                <div className="side-card cards-side">
-                  <SectionTitle
-                    icon={<Shield size={20} />}
-                    title="Жёлтые карточки"
-                    badge={cardsAvailable ? `${Math.min(cards?.home?.sample || 0, cards?.away?.sample || 0)}/30` : "N/A"}
-                  />
-                  {cardsAvailable ? (
-                    <>
-                      <div className="cards-versus">
-                        <div>
-                          <span>{result.match.home_team}</span>
-                          <strong>{number(cards?.home?.average, 2)}</strong>
-                          <small>среднее за {cards?.home?.sample || 0} матчей</small>
-                        </div>
-                        <div>
-                          <span>{result.match.away_team}</span>
-                          <strong>{number(cards?.away?.average, 2)}</strong>
-                          <small>среднее за {cards?.away?.sample || 0} матчей</small>
-                        </div>
-                      </div>
-
-                      <div className="cards-total-box">
-                        <div>
-                          <span>Средний тотал команд</span>
-                          <strong>{number(cards?.team_total_average, 2)}</strong>
-                        </div>
-                        <div>
-                          <span>Ожидаемый тотал</span>
-                          <strong>{number(cards?.expected_total, 2)}</strong>
-                        </div>
-                      </div>
-
-                      <div className="referee-card">
-                        <div className="referee-icon">🧑‍⚖️</div>
-                        <div className="referee-copy">
-                          <span>Арбитр матча</span>
-                          <strong>{referee?.name || "Пока не назначен"}</strong>
-                          {referee?.assigned ? (
-                            <small>
-                              {referee?.yellow_average != null
-                                ? `${number(referee.yellow_average, 2)} жёлтых за матч`
-                                : "Среднее по карточкам недоступно"}
-                              {referee?.matches ? ` · ${referee.matches} матчей` : ""}
-                            </small>
-                          ) : (
-                            <small>{referee?.message || "Данные арбитра пока не опубликованы"}</small>
-                          )}
-                        </div>
-                      </div>
-
-                      {cardsQuality ? (
-                        <div className="cards-quality-row">
-                          <span>Качество данных</span>
-                          <Progress value={cardsQuality} tone="yellow" />
-                          <strong>{Math.round(cardsQuality)}%</strong>
-                        </div>
-                      ) : null}
-                    </>
-                  ) : (
-                    <div className="empty-side">{cards?.message || "Данные по жёлтым карточкам недоступны."}</div>
-                  )}
-                </div>
-
                 <div className="side-card ai-side"><SectionTitle icon={<Brain size={20} />} title="AI Assessment" /><div className="ai-score-row"><div><span>Rating</span><strong>{ai.rating ?? "—"}</strong></div><div><span>Risk</span><strong>{ai.risk ?? "—"}</strong></div></div><p>{ai.summary || modelRecommendation}</p></div>
               </aside>
             </div>
 
             {bestBet ? (
               <div className="mobile-value-dock">
-                <div><span>TOP VALUE</span><strong>{bestBet.selection || bestBet.market}</strong></div>
+                <div><span>СТАВКА ДНЯ</span><strong>{prettyBetLabel(bestBet)}</strong></div>
                 <div><span>Value</span><strong>{valuePercent(bestBet.value)}</strong></div>
+                <div><span>Confidence</span><strong>{percentText(bestBet.confidence)}</strong></div>
                 <div><span>Кэф</span><strong>{bestBet.odds ?? "—"}</strong></div>
               </div>
             ) : null}
