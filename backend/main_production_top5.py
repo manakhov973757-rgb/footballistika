@@ -9808,6 +9808,18 @@ async def root():
     }
 
 
+@app.get("/teams")
+async def teams_catalog():
+    """Return the current team catalogue for frontend autocomplete."""
+    teams = await ensure_teams_loaded()
+    names = sorted({
+        str(team.get("name") or "").strip()
+        for team in teams
+        if isinstance(team, dict) and str(team.get("name") or "").strip()
+    })
+    return {"status": "success", "teams": names}
+
+
 @app.get("/health")
 async def health():
     return {

@@ -412,6 +412,7 @@ function AboutPage() {
 function App() {
   const [homeTeam, setHomeTeam] = useState("");
   const [awayTeam, setAwayTeam] = useState("");
+  const [teamOptions, setTeamOptions] = useState([]);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingStage, setLoadingStage] = useState(0);
@@ -419,6 +420,26 @@ function App() {
   const [error, setError] = useState("");
   const [activePage, setActivePage] = useState("home");
   const resultsRef = useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadTeamOptions() {
+      try {
+        const response = await fetch(`${API_URL}/teams`);
+        if (!response.ok) return;
+        const data = await response.json();
+        if (!cancelled && Array.isArray(data?.teams)) {
+          setTeamOptions(data.teams);
+        }
+      } catch (err) {
+        console.warn("Team autocomplete is temporarily unavailable", err);
+      }
+    }
+
+    loadTeamOptions();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (!loading) {
@@ -555,9 +576,9 @@ function App() {
             <div className="engine-pill"><span className="live-dot" /> {result?.version || "ENGINE ONLINE"}</div>
           </div>
           <div className="selector-row">
-            <label className="team-field"><span>Хозяева</span><input aria-label="Команда хозяев" autoComplete="off" placeholder="Например, Bayern Munich" value={homeTeam} onChange={(e) => setHomeTeam(e.target.value)} onKeyDown={onEnter} /></label>
+            <label className="team-field"><span>Хозяева</span><input aria-label="Команда хозяев" autoComplete="off" list="footballistika-home-teams" placeholder="Начните вводить команду" value={homeTeam} onChange={(e) => setHomeTeam(e.target.value)} onKeyDown={onEnter} /><datalist id="footballistika-home-teams">{teamOptions.map((team) => <option value={team} key={`home-${team}`} />)}</datalist></label>
             <div className="selector-vs">VS</div>
-            <label className="team-field"><span>Гости</span><input aria-label="Команда гостей" autoComplete="off" placeholder="Например, Union Berlin" value={awayTeam} onChange={(e) => setAwayTeam(e.target.value)} onKeyDown={onEnter} /></label>
+            <label className="team-field"><span>Гости</span><input aria-label="Команда гостей" autoComplete="off" list="footballistika-away-teams" placeholder="Начните вводить команду" value={awayTeam} onChange={(e) => setAwayTeam(e.target.value)} onKeyDown={onEnter} /><datalist id="footballistika-away-teams">{teamOptions.map((team) => <option value={team} key={`away-${team}`} />)}</datalist></label>
             <button className="analyze-btn" onClick={analyzeMatch} disabled={loading || !homeTeam.trim() || !awayTeam.trim()}>
               {loading ? <><Loader2 className="spin" size={19} /> Анализируем...</> : <><Brain size={19} /> Анализировать <ChevronRight size={18} /></>}
             </button>
