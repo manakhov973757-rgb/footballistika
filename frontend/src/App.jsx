@@ -322,9 +322,9 @@ function StatisticsPage() {
     <main className="page-wrap stats-page">
       <section className="stats-hero">
         <div>
-          <span className="hero-kicker"><Trophy size={16} /> BET OF THE DAY TRACKER</span>
-          <h1>Статистика <span>ставок дня</span></h1>
-          <p>Каждая ставка дня фиксируется автоматически. После финального свистка система проверяет счёт и пересчитывает месячный профит.</p>
+          <span className="hero-kicker"><Trophy size={16} /> ANALYSIS HISTORY</span>
+          <h1>Статистика <span>анализов</span></h1>
+          <p>Каждый успешно проанализированный матч автоматически добавляется в статистику — и со Ставкой дня, и без неё. Для матчей со ставкой после финального свистка система проверяет счёт и пересчитывает месячный профит.</p>
         </div>
         <div className="stats-month-control">
           <label htmlFor="stats-month">Месяц</label>
@@ -358,7 +358,7 @@ function StatisticsPage() {
       </section>
 
       <section className="panel-card stats-journal-card">
-        <SectionTitle icon={<Database size={20} />} title="Журнал ставок дня" subtitle="Результат фиксируется автоматически по итоговому счёту" badge={`${bets.length} матчей`} />
+        <SectionTitle icon={<Database size={20} />} title="История анализов" subtitle="Все проанализированные матчи сохраняются автоматически" badge={`${bets.length} матчей`} />
         <div className="value-table-wrap stats-table-wrap">
           <table className="value-table stats-table">
             <thead><tr><th>Дата</th><th>Матч</th><th>Ставка дня</th><th>Кэф</th><th>Результат</th><th>Счёт</th><th>Профит</th></tr></thead>
@@ -380,7 +380,7 @@ function StatisticsPage() {
                   </tr>
                 );
               })}
-              {!bets.length && !loadingStats ? <tr><td colSpan="7" className="empty-table">В этом месяце пока нет зафиксированных ставок дня.</td></tr> : null}
+              {!bets.length && !loadingStats ? <tr><td colSpan="7" className="empty-table">В этом месяце пока нет проанализированных матчей.</td></tr> : null}
               {loadingStats && !bets.length ? <tr><td colSpan="7" className="empty-table"><Loader2 className="spin inline-spinner" size={18} /> Проверяем результаты матчей...</td></tr> : null}
             </tbody>
           </table>
